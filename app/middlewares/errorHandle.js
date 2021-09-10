@@ -5,7 +5,7 @@ const sendError = (error, res) => {
 		status: error.status,
 		code: error.statusCode,
 		message: error.message,
-		trace: error.stack,
+		// trace: error.stack,
 	});
 };
 
