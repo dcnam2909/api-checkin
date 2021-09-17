@@ -1,5 +1,5 @@
-const AppError = require('../utils/AppError');
-const userService = require('../services/user.service');
+const AppError = require('../config/AppError');
+const userService = require('../services/auth.service');
 const jwt = require('jsonwebtoken');
 
 const createToken = (id) => {
@@ -9,11 +9,9 @@ const createToken = (id) => {
 exports.signin = async (req, res, next) => {
 	try {
 		const { username, password } = req.body;
-
-		const user = await userService.login(username, password);
-
+		if (!username || !password) throw new AppError('Please provide email and password!', 400);
+		const user = await userService.checkUser(username, password);
 		if (!user) throw new AppError('Username or password incorrect, please try again!', 401);
-
 		const token = createToken(user.id);
 		res.json({
 			status: 'success',
@@ -29,7 +27,7 @@ exports.signup = async (req, res, next) => {
 	try {
 		//format birthday from DD-MM-YYYY to YYYY-MM-DD
 		const birthday = req.body.birthday.split('-');
-		const formatBirday = new Date(`${birthday[2]}-${birthday[1]}-${birthday[0]}`)
+		const formatBirday = new Date(`${birthday[2]}-${birthday[1]}-${birthday[0]}`);
 		const data = {
 			username: req.body.username,
 			password: req.body.password,

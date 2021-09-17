@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
-const AppError = require('../utils/AppError');
+const AppError = require('../config/AppError');
+const userService = require('../services/user.service');
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
 	try {
 		let token;
 		if (
@@ -14,14 +15,15 @@ module.exports = (req, res, next) => {
 		if (!token) throw new AppError('Please log in!', 401);
 		const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
 
-        //Check expire token
-		if (Date.now() > tokenDecode.exp*1000)
-			throw new AppError('Token is expire, please log in again!', 401);
-
         //Send tokenDecode
-        req.body.tokenDecode = tokenDecode;
-		next();
+        const user = await userService.checkPassChanged(tokenDecode);
+		console.log(user);
+		if (!user)
+			throw new AppError('Your password has been changed. Please, login again',401)
+		req.body.user = user;
+		next()
 	} catch (error) {
+		console.log(error)
 		next(error);
 	}
 };

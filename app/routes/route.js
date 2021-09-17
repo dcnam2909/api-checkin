@@ -1,5 +1,5 @@
 const express = require('express');
-const AppError = require('../utils/AppError');
+const AppError = require('../config/AppError');
 const authRoute = require('./auth.route');
 const route = express.Router();
 //Route import
