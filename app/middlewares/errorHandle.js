@@ -18,7 +18,7 @@ const duplicateHandle = (error) => {
 
 const validationHandle = (error) => {
 	let key = Object.keys(error.errors);
-	let message = `Invalid input data: ${key}`;
+	let message = error.errors[key].properties.message;
 	return new AppError(message, 400);
 };
 
