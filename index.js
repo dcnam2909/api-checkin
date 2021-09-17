@@ -1,11 +1,8 @@
-// const env = require('dotenv').config({ path: `${__dirname}/.env` });
-// const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
 
-// app.use(morgan('dev'));
 const errorHandle = require('./app/middlewares/errorHandle');
 const route = require('./app/routes/route');
 

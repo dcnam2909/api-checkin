@@ -1,4 +1,4 @@
-./indexdev
+/dev.js
 /node_modules
 /.env
 /public/images
