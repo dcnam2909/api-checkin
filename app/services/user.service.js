@@ -11,8 +11,14 @@ exports.changePass = async (id, currentPass, newPass) => {
 };
 
 exports.checkPassChanged = async (tokenDecode) => {
-	const user = await User.findById(tokenDecode.id);
-	if (await user.changedPasswordAfter(tokenDecode.iat))
-		return null;
+	const user = await User.findById(tokenDecode.id).select('+passwordChangeAt');
+	if (await user.changedPasswordAfter(tokenDecode.iat)) return null;
 	return user;
+};
+
+exports.updateInfo = async (id, dataUpdate) => {
+	return await User.findByIdAndUpdate(id, dataUpdate, {
+		runValidators: true,
+		new: true,
+	});
 };

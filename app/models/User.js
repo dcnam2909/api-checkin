@@ -24,6 +24,7 @@ const UserSchema = new mongoose.Schema(
 		},
 		passwordChangeAt: {
 			type: Date,
+			select: false,
 		},
 		firstName: {
 			type: String,
@@ -94,7 +95,7 @@ UserSchema.pre('save', async function (next) {
 });
 
 UserSchema.pre(/^find/, async function (next) {
-	this.select('-__v -updatedAt -createdAt');
+	this.select('-__v -updatedAt -createdAt ');
 	next();
 });
 

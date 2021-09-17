@@ -14,10 +14,8 @@ module.exports = async (req, res, next) => {
         //Check log in
 		if (!token) throw new AppError('Please log in!', 401);
 		const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
-
         //Send tokenDecode
         const user = await userService.checkPassChanged(tokenDecode);
-		console.log(user);
 		if (!user)
 			throw new AppError('Your password has been changed. Please, login again',401)
 		req.body.user = user;
