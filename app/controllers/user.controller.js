@@ -7,6 +7,7 @@ exports.getInfo = async (req, res, next) => {
 		user.passwordChangeAt = undefined;
 		user._id = undefined;
 		res.status(200).json({
+			status: 'success',
 			user,
 		});
 	} catch (error) {
@@ -34,16 +35,18 @@ exports.changePassword = async (req, res, next) => {
 
 exports.updateInfo = async (req, res, next) => {
 	try {
-		let birthday
+		let birthday = req.body.birthday;
 		if (birthday) {
-			birthday = req.body.birthday.split('-');
+			birthday = birthday.split('-');
 			birthday = new Date(`${birthday[2]}-${birthday[1]}-${birthday[0]}`);
 		}
+		let address = {
+			city: req.body.city,
+			address: req.body.address,
+		};
+		if (!req.body.city || !req.body.address) address = undefined;
 		const dataUpdate = {
-			address: {
-				city: req.body.city,
-				address: req.body.address,
-			},
+			address,
 			firstName: req.body.firstName,
 			lastName: req.body.lastName,
 			birthday,
