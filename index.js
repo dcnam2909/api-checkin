@@ -5,7 +5,7 @@ const app = express();
 
 const errorHandle = require('./app/middlewares/errorHandle');
 const route = require('./app/routes/route');
-
+const db = require('./app/config/db')
 //Middleware global
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
@@ -19,8 +19,8 @@ app.use(errorHandle);
 //Database connect
 // db();
 const connectionString = process.env.DB_CONNECT;
-const db = require('./app/config/db')(connectionString);
-const db = require('./app/config/db')();
+db(connectionString);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
