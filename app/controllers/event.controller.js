@@ -16,6 +16,20 @@ exports.getAll = async (req, res, next) => {
 	}
 };
 
+exports.getOwnerEvent = async (req, res, next) => {
+	try {
+		const idManager = req.body.user._id;
+		const event = await eventService.getOwnerEvent(idManager);
+		res.status(200).json({
+			status: 'success',
+			result: event.length,
+			event,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
 exports.getOne = async (req, res, next) => {
 	try {
 		let id = req.params.code;
@@ -49,14 +63,14 @@ exports.create = async (req, res, next) => {
 };
 exports.update = async (req, res, next) => {
 	try {
-		const eventId = req.params.id;
+		const idEvent = req.params.idEvent;
 		const dataEvent = {
 			name: req.body.name,
 			description: req.body.description,
 			location: req.body.location,
 			typeEvent: req.body.typeEvent,
 		};
-		const event = await eventService.update(eventId, dataEvent);
+		const event = await eventService.update(idEvent, dataEvent);
 		res.status(200).json({
 			status: 'success',
 			event,
@@ -123,6 +137,9 @@ exports.decodeCode = async (req, res, next) => {
 		const code = req.body.code;
 		const event = await eventService.decode(code);
 		if (!event) throw new AppError('Your key is expired, please try again!', 400);
+
+		if (event.typeEvent !== 'public' && !event.listVisiters.includes(req.body.user._id))
+			throw new AppError('You can not access this event!', 401);
 		res.status(200).json({
 			status: 'success',
 			event,

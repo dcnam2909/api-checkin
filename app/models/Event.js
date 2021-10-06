@@ -26,7 +26,7 @@ const EventSchema = new mongoose.Schema(
 		},
 		openReg: Date,
 		endReg: Date,
-		listVisiter: {
+		listVisiters: {
 			type: [mongoose.Schema.Types.ObjectId],
 			ref: User,
 		},

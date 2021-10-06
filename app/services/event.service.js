@@ -3,7 +3,11 @@ const crypto = require('crypto-js');
 const AppError = require('../config/AppError');
 
 exports.getAll = async () => {
-	return await Event.find().populate({ path: 'owner' }).populate({ path: 'listVisiter' });
+	return await Event.find().populate({ path: 'owner' }).populate({ path: 'listVisiters' });
+};
+
+exports.getOwnerEvent = async (id) => {
+	return await Event.find({ owner: { $eq: id } });
 };
 
 exports.createNew = async (newEvent) => {
@@ -53,9 +57,9 @@ exports.registerToEvent = async (idEvent, idUser) => {
 		event.typeEvent === 'restricted' &&
 		new Date(event.openReg).getTime() < Date.now() &&
 		new Date(event.endReg).getTime() > Date.now() &&
-		!event.listVisiter.includes(idUser)
+		!event.listVisiters.includes(idUser)
 	) {
-		event.listVisiter.push(idUser);
+		event.listVisiters.push(idUser);
 		event.save();
 		return event;
 	}

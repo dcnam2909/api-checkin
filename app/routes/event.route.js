@@ -9,7 +9,7 @@ const checkOwner = require('../middlewares/checkOwner');
 eventRoute.use(verifyToken);
 
 eventRoute.post('/decode', eventController.decodeCode); // One
-eventRoute.post('/:idEvent/register', checkRoles('visiter'), eventController.regsiterEvent);
+eventRoute.post('/:idEvent/register', eventController.regsiterEvent);
 eventRoute.get(
 	'/:idEvent/code',
 	checkRoles('manager', 'agent'),
@@ -22,5 +22,5 @@ eventRoute.get(
 	checkOwner,
 	eventController.generateQRCode,
 ); // expire= amount=
-eventRoute.get('/', checkRoles('visiter'), eventController.getAll); // All
+eventRoute.get('/',  eventController.getAll); // All
 module.exports = eventRoute;
