@@ -4,8 +4,10 @@ const userController = require('../controllers/user.controller');
 const checkRoles = require('../middlewares/checkRoles');
 const verifyToken = require('../middlewares/verifyToken');
 
-userRoute.get('/', verifyToken, userController.getInfo);
-userRoute.patch('/update', verifyToken, userController.updateInfo);
-userRoute.patch('/changePassword', verifyToken, userController.changePassword);
+userRoute.use(verifyToken);
+
+userRoute.get('/', userController.getInfo);
+userRoute.patch('/update', checkRoles('user'), userController.updateInfo);
+userRoute.patch('/changePassword', userController.changePassword);
 
 module.exports = userRoute;

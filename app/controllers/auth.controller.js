@@ -9,7 +9,7 @@ const createToken = (id) => {
 exports.signin = async (req, res, next) => {
 	try {
 		const { username, password } = req.body;
-		if (!username || !password) throw new AppError('Please provide email and password!', 400);
+		if (!username || !password) throw new AppError('Please enter your username and password!', 400);
 		const user = await userService.checkUser(username, password);
 		if (!user) throw new AppError('Username or password incorrect, please try again!', 401);
 		const token = createToken(user.id);
@@ -25,21 +25,17 @@ exports.signin = async (req, res, next) => {
 
 exports.signup = async (req, res, next) => {
 	try {
-		//format birthday from DD-MM-YYYY to YYYY-MM-DD
-		const birthday = req.body.birthday.split('-');
-		const formatBirday = new Date(`${birthday[2]}-${birthday[1]}-${birthday[0]}`);
 		const data = {
 			username: req.body.username,
 			password: req.body.password,
-			lastName: req.body.lastName,
-			firstName: req.body.firstName,
+			fullName: req.body.fullName,
 			email: req.body.email,
-			birthday: formatBirday,
-			address: {
-				city: req.body.city,
-				address: req.body.address,
-			},
-			role: 'user',
+			address: req.body.address,
+			phone: req.body.phone,
+			workUnit: req.body.workUnit,
+			addressUnit: req.body.addressUnit,
+			idCB: req.body.idCB,
+			idSV: req.body.idSV,
 		};
 		const user = await userService.createUser(data);
 		const token = createToken(user._id);
@@ -53,25 +49,4 @@ exports.signup = async (req, res, next) => {
 	}
 };
 
-exports.signupManager = async (req, res, next) => {
-	try {
-		const data = {
-			username: req.body.username,
-			password: req.body.password,
-			lastName: req.body.lastName,
-			firstName: req.body.firstName,
-			email: req.body.email,
-			company: req.body.company,
-			role: 'manager',
-		};
-		const manager = await userService.createUser(data);
-		const token = createToken(manager.__id);
-		res.status(200).json({
-			status: 'success',
-			token,
-			message: 'Create manager successfully.',
-		});
-	} catch (error) {
-		next(error);
-	}
-};
+

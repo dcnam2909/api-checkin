@@ -6,7 +6,7 @@ exports.createUser = async (data) => {
 };
 
 exports.checkUser = async (username, password) => {
-	const user = await User.findOne({username}).select('+password +role');
+	const user = await User.findOne({username}).select('+password');
 	if (user && (await user.comparePassword(password))) {
 		return { id: user._id, role: user.role };
 	}
