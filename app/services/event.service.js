@@ -1,8 +1,11 @@
 const Event = require('../models/Event');
 const crypto = require('crypto-js');
 
-exports.getAll = async () => {
-	return await Event.find().select('-owner -listVisiters');
+exports.getAll = async (query) => {
+	console.log(query);
+	return await Event.find(query)
+		.select('-owner -listVisiters')
+		.sort({ dateEvent: 'asc' });
 };
 
 exports.getOwnerEvent = async (id) => {
@@ -47,8 +50,6 @@ exports.decode = async (code) => {
 	const decode = JSON.parse(
 		crypto.Rabbit.decrypt(code, process.env.SECRET_KEY_EVENT).toString(crypto.enc.Utf8),
 	);
-	// console.log('Expire\t' + new Date(decode.expire));
-	// console.log('Now\t' + new Date(Date.now()));
 	if (decode.expire > Date.now()) return decode.id;
 };
 
@@ -68,8 +69,9 @@ exports.registerToEvent = async (idEvent, idUser) => {
 
 exports.checkIn = async (idEvent, macID, timeCheckin, idUser) => {
 	let event = await Event.findById(idEvent);
+	console.log(event);
 	if (
-		(timeCheckin.getTime() < event.dateEvent.getTime()) ||
+		timeCheckin.getTime() < event.dateEvent.getTime() ||
 		(event.typeEvent !== 'public' && !event.listVisiters.includes(idUser)) ||
 		event.listVisitersCheckin.some((el) => el.visiter.equals(idUser))
 	)

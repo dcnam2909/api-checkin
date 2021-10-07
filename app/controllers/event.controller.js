@@ -5,7 +5,9 @@ const AppError = require('../config/AppError');
 const { genQRCode } = require('../config/genQRCode');
 exports.getAll = async (req, res, next) => {
 	try {
-		const event = await eventService.getAll();
+		
+		const query = req.query;
+		const event = await eventService.getAll(query);
 		res.status(200).json({
 			status: 'success',
 			result: event.length,
