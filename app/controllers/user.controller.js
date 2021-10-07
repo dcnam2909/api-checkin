@@ -1,4 +1,5 @@
 const userService = require('../services/user.service');
+const eventService = require('../services/event.service');
 const AppError = require('../config/AppError');
 
 exports.getInfo = async (req, res, next) => {
@@ -35,7 +36,6 @@ exports.changePassword = async (req, res, next) => {
 
 exports.updateInfo = async (req, res, next) => {
 	try {
-
 		const dataUpdate = {
 			fullName,
 			address,
@@ -50,6 +50,22 @@ exports.updateInfo = async (req, res, next) => {
 			status: 'success',
 			message: 'Update info success',
 			user: user,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.checkIn = async (req, res, next) => {
+	try {
+		const { macID, timeCheckin, code, user } = req.body;
+		const idEvent = await eventService.decode(code);
+		if (!idEvent) throw new AppError('Your key is expired, please try again!', 401);
+		const event = await eventService.checkIn(idEvent, macID, new Date(timeCheckin), user._id);
+		if (!event) throw new AppError('Check-in fail!', 400);
+		res.status(200).json({
+			status: 'success',
+			message: 'Check-in successfully!',
 		});
 	} catch (error) {
 		next(error);

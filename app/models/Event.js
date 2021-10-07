@@ -30,6 +30,13 @@ const EventSchema = new mongoose.Schema(
 			type: [mongoose.Schema.Types.ObjectId],
 			ref: User,
 		},
+		listVisitersCheckin: [
+			{
+				visiter: { type: mongoose.Schema.Types.ObjectId, ref: User , unique: true},
+				macID: String,
+				timeCheckin: Date,
+			},
+		],
 	},
 	{
 		timestamps: true,
@@ -37,7 +44,7 @@ const EventSchema = new mongoose.Schema(
 );
 
 EventSchema.pre(/^find/, async function (next) {
-	this.select('-__v -key -user -updatedAt -createdAt');
+	this.select('-__v -user -updatedAt -createdAt');
 	next();
 });
 

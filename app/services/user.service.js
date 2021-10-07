@@ -24,6 +24,6 @@ exports.updateInfo = async (id, dataUpdate) => {
 };
 
 exports.getAllUsers = async (query) => {
-	if(query) return await User.find(query);
-	return await User.find({role: {$ne: 'admin'}});
+	if (query) return await User.find(query);
+	return await User.find({ role: { $ne: 'admin' } });
 };

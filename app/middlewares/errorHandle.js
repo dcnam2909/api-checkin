@@ -17,7 +17,7 @@ const duplicateHandle = (error) => {
 };
 
 const validationHandle = (error) => {
-	let keys = Object.values(error.errors).map(el => el.message);
+	let keys = Object.values(error.errors).map((el) => el.message);
 	let message = `Invalid input data. ${keys.join('. ')}`;
 	return new AppError(message, 400);
 };
@@ -32,10 +32,10 @@ const tokenUndefinedHandle = (error) => {
 	return new AppError(message, 401);
 };
 const cannotOpenFile = (error) => {
-	let message = `Something wrong, please try again!`;
-	console.log(error);
+	let message = `Oops!`;
 	return new AppError(message, 500);
 };
+
 module.exports = (error, req, res, next) => {
 	error.statusCode = error.statusCode || 500;
 	error.message = error.message || 'Oops! Something went wrong';
@@ -45,6 +45,5 @@ module.exports = (error, req, res, next) => {
 	if (error.name === 'TokenExpiredError') error = tokenExpiredHandle(error);
 	if (error.name === 'JsonWebTokenError') error = tokenUndefinedHandle(error);
 	if (error.code === 'ENOENT') error = cannotOpenFile(error);
-
 	sendError(error, res);
 };

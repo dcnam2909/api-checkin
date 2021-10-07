@@ -7,7 +7,11 @@ const verifyToken = require('../middlewares/verifyToken');
 userRoute.use(verifyToken);
 
 userRoute.get('/', userController.getInfo);
-userRoute.patch('/update', checkRoles('user'), userController.updateInfo);
+
+userRoute.post('/checkin', checkRoles('visiter'), userController.checkIn);
+
+userRoute.patch('/update', userController.updateInfo);
+
 userRoute.patch('/changePassword', userController.changePassword);
 
 module.exports = userRoute;

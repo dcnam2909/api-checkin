@@ -1,9 +1,8 @@
 const Event = require('../models/Event');
 const crypto = require('crypto-js');
-const AppError = require('../config/AppError');
 
 exports.getAll = async () => {
-	return await Event.find().populate({ path: 'owner' }).populate({ path: 'listVisiters' });
+	return await Event.find().select('-owner -listVisiters');
 };
 
 exports.getOwnerEvent = async (id) => {
@@ -19,7 +18,9 @@ exports.getOne = async (id) => {
 };
 
 exports.update = async (id, dataUpdate) => {
-	return await Event.findByIdAndUpdate(id, dataUpdate, { runValidators: true, new: true });
+	return await Event.findByIdAndUpdate(id, dataUpdate, { runValidators: true, new: true }).select(
+		'-listVisiters',
+	);
 };
 
 exports.eventOwner = async (eventId, managerId) => {
@@ -46,9 +47,9 @@ exports.decode = async (code) => {
 	const decode = JSON.parse(
 		crypto.Rabbit.decrypt(code, process.env.SECRET_KEY_EVENT).toString(crypto.enc.Utf8),
 	);
-	console.log('Expire\t' + new Date(decode.expire));
-	console.log('Now\t' + new Date(Date.now()));
-	if (decode.expire > Date.now()) return await Event.findById(decode.id);
+	// console.log('Expire\t' + new Date(decode.expire));
+	// console.log('Now\t' + new Date(Date.now()));
+	if (decode.expire > Date.now()) return decode.id;
 };
 
 exports.registerToEvent = async (idEvent, idUser) => {
@@ -63,4 +64,17 @@ exports.registerToEvent = async (idEvent, idUser) => {
 		event.save();
 		return event;
 	}
+};
+
+exports.checkIn = async (idEvent, macID, timeCheckin, idUser) => {
+	let event = await Event.findById(idEvent);
+	if (
+		timeCheckin.getTime() < event.dateEvent.getTime() ||
+		(event.typeEvent !== 'public' && !event.listVisiters.includes(idUser)) ||
+		(event && event.listVisitersCheckin.some((el) => el.visiter.equals(idUser)))
+	)
+		return null;
+	event.listVisitersCheckin.push({ visiter: idUser, macID, timeCheckin });
+	event.save();
+	return event;
 };

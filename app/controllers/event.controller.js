@@ -66,9 +66,10 @@ exports.update = async (req, res, next) => {
 		const idEvent = req.params.idEvent;
 		const dataEvent = {
 			name: req.body.name,
-			description: req.body.description,
 			location: req.body.location,
 			typeEvent: req.body.typeEvent,
+			openReg: req.body.openReg,
+			endReg: req.body.endReg,
 		};
 		const event = await eventService.update(idEvent, dataEvent);
 		res.status(200).json({
@@ -84,7 +85,7 @@ exports.setAgent = async (req, res, next) => {
 	try {
 		const idUser = req.params.idUser;
 		const idEvent = req.params.idEvent;
-		const user = await userService.updateInfo(idUser, { role: 'agent' });
+		await userService.updateInfo(idUser, { role: 'agent' });
 		const event = await eventService.addOwner(idUser, idEvent);
 		res.status(200).json({
 			status: 'success',
@@ -121,11 +122,11 @@ exports.generateQRCode = async (req, res, next) => {
 		const key = await eventService.generateKey(idEvent, expire);
 		const nameQR = idEvent + expire;
 		//gen QR Code
-		await genQRCode(key, nameQR);
+		const qrcode = await genQRCode(key, nameQR);
 		const pathQR = `images/${nameQR}.png`;
 		res.status(200).json({
 			status: 'success',
-			path: pathQR,
+			qrcode,
 		});
 	} catch (error) {
 		next(error);
@@ -135,9 +136,9 @@ exports.generateQRCode = async (req, res, next) => {
 exports.decodeCode = async (req, res, next) => {
 	try {
 		const code = req.body.code;
-		const event = await eventService.decode(code);
-		if (!event) throw new AppError('Your key is expired, please try again!', 400);
-
+		const idEvent = await eventService.decode(code);
+		if (!idEvent) throw new AppError('Your key is expired, please try again!', 400);
+		const event = await eventService.getOne(idEvent);
 		if (event.typeEvent !== 'public' && !event.listVisiters.includes(req.body.user._id))
 			throw new AppError('You can not access this event!', 401);
 		res.status(200).json({
