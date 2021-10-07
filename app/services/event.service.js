@@ -3,9 +3,7 @@ const crypto = require('crypto-js');
 
 exports.getAll = async (query) => {
 	console.log(query);
-	return await Event.find(query)
-		.select('-owner -listVisiters')
-		.sort({ dateEvent: 'asc' });
+	return await Event.find(query).select('-owner -listVisiters').sort({ dateEvent: 'asc' });
 };
 
 exports.getOwnerEvent = async (id) => {
@@ -69,7 +67,6 @@ exports.registerToEvent = async (idEvent, idUser) => {
 
 exports.checkIn = async (idEvent, macID, timeCheckin, idUser) => {
 	let event = await Event.findById(idEvent);
-	console.log(event);
 	if (
 		timeCheckin.getTime() < event.dateEvent.getTime() ||
 		(event.typeEvent !== 'public' && !event.listVisiters.includes(idUser)) ||
