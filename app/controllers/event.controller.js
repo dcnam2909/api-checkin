@@ -115,9 +115,8 @@ exports.generateCode = async (req, res, next) => {
 
 exports.generateQRCode = async (req, res, next) => {
 	try {
-		const expire =
-			new Date().getTime() + parseInt(req.query.epxire) * 1000 * 60 ||
-			new Date().getTime() + 10 * 1000 * 60;
+		const expireQuery = req.query.expire * 1;
+		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 10 * 1000 * 60;
 		const idEvent = req.params.idEvent;
 		const key = await eventService.generateKey(idEvent, expire);
 		const nameQR = idEvent + expire;

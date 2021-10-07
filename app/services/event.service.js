@@ -69,9 +69,9 @@ exports.registerToEvent = async (idEvent, idUser) => {
 exports.checkIn = async (idEvent, macID, timeCheckin, idUser) => {
 	let event = await Event.findById(idEvent);
 	if (
-		timeCheckin.getTime() < event.dateEvent.getTime() ||
+		(timeCheckin.getTime() < event.dateEvent.getTime()) ||
 		(event.typeEvent !== 'public' && !event.listVisiters.includes(idUser)) ||
-		(event && event.listVisitersCheckin.some((el) => el.visiter.equals(idUser)))
+		event.listVisitersCheckin.some((el) => el.visiter.equals(idUser))
 	)
 		return null;
 	event.listVisitersCheckin.push({ visiter: idUser, macID, timeCheckin });
