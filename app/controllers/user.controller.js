@@ -15,7 +15,7 @@ exports.getInfo = async (req, res, next) => {
 		next(error);
 	}
 };
-
+//615db023ba34bc9eb2128944
 exports.changePassword = async (req, res, next) => {
 	try {
 		const user = req.body.user;
