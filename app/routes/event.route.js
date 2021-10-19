@@ -12,13 +12,13 @@ eventRoute.post('/decode', eventController.decodeCode); // One
 eventRoute.post('/:idEvent/register', eventController.regsiterEvent);
 eventRoute.get(
 	'/:idEvent/code',
-	checkRoles('manager', 'agent'),
+	checkRoles('Manager', 'Agent'),
 	checkOwner,
 	eventController.generateCode,
 ); // expire=
 eventRoute.get(
 	'/:idEvent/qrcode',
-	checkRoles('manager', 'agent'),
+	checkRoles('Manager', 'Agent'),
 	checkOwner,
 	eventController.generateQRCode,
 ); // expire= amount=

@@ -9,15 +9,15 @@ managerRoute.use(verifyToken);
 
 managerRoute.put(
 	'/:idEvent/setAgent/:idUser',
-	checkRoles('manager'),
+	checkRoles('Manager'),
 	checkOwner,
 	eventController.setAgent,
 );
 
-managerRoute.patch('/event/:idEvent', checkRoles('manager'), checkOwner, eventController.update);
+managerRoute.patch('/event/:idEvent', checkRoles('Manager'), checkOwner, eventController.update);
 
-managerRoute.get('/event', checkRoles('manager', 'agent'), eventController.getOwnerEvent);
+managerRoute.get('/event', checkRoles('Manager', 'Agent'), eventController.getOwnerEvent);
 
-managerRoute.post('/event', checkRoles('manager'), eventController.create); 
+managerRoute.post('/event', checkRoles('Manager'), eventController.create); 
 
 module.exports = managerRoute;

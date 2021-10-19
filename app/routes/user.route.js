@@ -8,7 +8,7 @@ userRoute.use(verifyToken);
 
 userRoute.get('/', userController.getInfo);
 
-userRoute.post('/checkin', checkRoles('visiter'), userController.checkIn);
+userRoute.post('/checkin', checkRoles('Visiter'), userController.checkIn);
 
 userRoute.patch('/update', userController.updateInfo);
 
