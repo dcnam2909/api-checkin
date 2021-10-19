@@ -45,8 +45,8 @@ const UserSchema = new mongoose.Schema(
         idSV: String,
         role: {
             type: String,
-            enum: ['visiter', 'manager', 'agent', 'admin'],
-            default: 'visiter',
+            enum: ['Visiter', 'Manager', 'Agent', 'Admin'],
+            default: 'Visiter',
         },
     },
     {timestamps: true},

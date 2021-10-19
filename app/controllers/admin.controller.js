@@ -16,7 +16,7 @@ exports.getAllUsers = async (req, res, next) => {
 exports.setManager = async (req, res, next) => {
 	try {
 		const idUser = req.params.id;
-		const user = await userService.updateInfo(idUser, { role: 'manager' });
+		const user = await userService.updateInfo(idUser, { role: 'Manager' });
 		res.status(200).json({
 			status: 'success',
 			user,
@@ -30,7 +30,7 @@ exports.setManager = async (req, res, next) => {
 exports.setVisiter = async (req, res, next) => {
 	try {
 		const idUser = req.params.id;
-		const user = await userService.updateInfo(idUser, { role: 'visiter' });
+		const user = await userService.updateInfo(idUser, { role: 'Visiter' });
 		res.status(200).json({
 			status: 'success',
 			user,

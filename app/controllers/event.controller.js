@@ -86,7 +86,7 @@ exports.setAgent = async (req, res, next) => {
 	try {
 		const idUser = req.params.idUser;
 		const idEvent = req.params.idEvent;
-		await userService.updateInfo(idUser, { role: 'agent' });
+		await userService.updateInfo(idUser, { role: 'Agent' });
 		const event = await eventService.addOwner(idUser, idEvent);
 		res.status(200).json({
 			status: 'success',
