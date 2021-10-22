@@ -1,9 +1,10 @@
 const Event = require('../models/Event');
 const crypto = require('crypto-js');
 
-exports.getAll = async (query) => {
-	console.log(query);
-	return await Event.find(query).select('-owner -listVisiters').sort({ dateEvent: 'asc' });
+exports.getAll = async () => {
+	return await Event.find({ typeEvent: { $eq: 'restricted' } })
+		.select('-owner -listVisiters')
+		.sort({ dateEvent: 'asc' });
 };
 
 exports.getOwnerEvent = async (id) => {
