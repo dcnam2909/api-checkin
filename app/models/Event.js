@@ -49,9 +49,11 @@ EventSchema.pre(/^find/, async function (next) {
 });
 
 EventSchema.pre('save', async function (next) {
-	if ((this.isModified('typeEvent') || this.isNew) && this.typeEvent !== 'restricted') {
-		this.openReg = '';
-		this.endReg = '';
+	if (this.isModified('typeEvent') || this.isNew) {
+		if (this.typeEvent !== 'restricted') {
+			this.openReg = '';
+			this.endReg = '';
+		}
 	}
 	next();
 });
