@@ -49,10 +49,8 @@ EventSchema.pre(/^find/, async function (next) {
 });
 
 EventSchema.pre('findOneAndUpdate', async function (next) {
-	console.log(this);
 	let event = this;
-	if ((event._update.typeEvent || event.isNew) && event.typeEvent !== 'restricted') {
-		console.log('in if 1');
+	if ((event._update.typeEvent || event.isNew) && event._update.typeEvent !== 'restricted') {
 		this.update({ openReg: null, endReg: null });
 	}
 	next();
