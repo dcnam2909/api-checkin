@@ -50,9 +50,10 @@ exports.create = async (req, res, next) => {
 			location: req.body.location,
 			typeEvent: req.body.typeEvent,
 			dateEvent: req.body.dateEvent,
+			openReg: req.body.openReg,
+			endReg: req.body.endReg,
 			owner: req.body.user._id,
 		};
-		console.log(newEvent);
 		const event = await eventService.createNew(newEvent);
 		res.status(200).json({
 			status: 'success',
