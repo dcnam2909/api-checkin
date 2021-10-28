@@ -16,8 +16,15 @@ managerRoute.put(
 
 managerRoute.patch('/event/:idEvent', checkRoles('Manager'), checkOwner, eventController.update);
 
+managerRoute.delete(
+	'/event/:idEvent',
+	checkRoles('Manager'),
+	checkOwner,
+	eventController.deleteEvent,
+);
+
 managerRoute.get('/event', checkRoles('Manager', 'Agent'), eventController.getOwnerEvent);
 
-managerRoute.post('/event', checkRoles('Manager'), eventController.create); 
+managerRoute.post('/event', checkRoles('Manager'), eventController.create);
 
 module.exports = managerRoute;

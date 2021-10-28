@@ -171,3 +171,16 @@ exports.regsiterEvent = async (req, res, next) => {
 		next(error);
 	}
 };
+
+exports.deleteEvent = async (req, res, next) => {
+	try {
+		const idEvent = req.params.idEvent;
+		const event = await eventService.deleteEvent(idEvent);
+		res.status(200).json({
+			status: 'success',
+			event,
+		});
+	} catch (error) {
+		next(error);
+	}
+};

@@ -78,3 +78,7 @@ exports.checkIn = async (idEvent, macID, timeCheckin, idUser) => {
 	event.save();
 	return event;
 };
+
+exports.deleteEvent = async (idEvent) => {
+	return await Event.deleteOne({ _id: idEvent });
+};
