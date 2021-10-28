@@ -8,7 +8,7 @@ exports.getAll = async () => {
 };
 
 exports.getOwnerEvent = async (id) => {
-	return await Event.find({ owner: { $eq: id } }).sort({ dateEvent: 1 });
+	return await Event.find({ owner: { $eq: id } }).sort({ dateEvent: -1 });
 };
 
 exports.createNew = async (newEvent) => {

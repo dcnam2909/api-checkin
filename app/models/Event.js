@@ -32,7 +32,7 @@ const EventSchema = new mongoose.Schema(
 		},
 		listVisitersCheckin: [
 			{
-				visiter: { type: mongoose.Schema.Types.ObjectId, ref: User , unique: true},
+				visiter: { type: mongoose.Schema.Types.ObjectId, ref: User, unique: true },
 				macID: String,
 				timeCheckin: Date,
 			},
@@ -48,6 +48,13 @@ EventSchema.pre(/^find/, async function (next) {
 	next();
 });
 
+EventSchema.pre('save', async function (next) {
+	if ((this.isModified('typeEvent') || this.isNew) && this.typeEvent !== 'restricted') {
+		this.openReg = '';
+		this.endReg = '';
+	}
+	next();
+});
 EventSchema.methods.checkOwner = function (idMananger) {
 	return this.owner.includes(idMananger);
 };
