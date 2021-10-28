@@ -21,7 +21,7 @@ exports.getOne = async (id) => {
 
 exports.update = async (id, dataUpdate) => {
 	return await Event.findByIdAndUpdate(id, dataUpdate, { runValidators: true, new: true }).select(
-		'-listVisiters',
+		'-listVisitersCheckin',
 	);
 };
 

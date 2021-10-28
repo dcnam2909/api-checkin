@@ -48,15 +48,16 @@ EventSchema.pre(/^find/, async function (next) {
 	next();
 });
 
-EventSchema.pre('save', async function (next) {
-	if (this.isModified('typeEvent') || this.isNew) {
-		if (this.typeEvent !== 'restricted') {
-			this.openReg = '';
-			this.endReg = '';
-		}
+EventSchema.pre('findOneAndUpdate', async function (next) {
+	console.log(this);
+	let event = this;
+	if ((event._update.typeEvent || event.isNew) && event.typeEvent !== 'restricted') {
+		console.log('in if 1');
+		this.update({ openReg: null, endReg: null });
 	}
 	next();
 });
+
 EventSchema.methods.checkOwner = function (idMananger) {
 	return this.owner.includes(idMananger);
 };
