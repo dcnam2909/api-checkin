@@ -49,9 +49,9 @@ exports.create = async (req, res, next) => {
 			name: req.body.name,
 			location: req.body.location,
 			typeEvent: req.body.typeEvent,
-			dateEvent: req.body.dateEvent.setHours(0, 0, 0, 0),
-			openReg: req.body.openReg.setHours(0, 0, 0, 0),
-			endReg: req.body.endReg.setHours(0, 0, 0, 0),
+			dateEvent: req.body.dateEvent,
+			openReg: req.body.openReg,
+			endReg: req.body.endReg,
 			owner: req.body.user._id,
 		};
 		const event = await eventService.createNew(newEvent);
@@ -70,9 +70,9 @@ exports.update = async (req, res, next) => {
 			name: req.body.name,
 			location: req.body.location,
 			typeEvent: req.body.typeEvent,
-			dateEvent: req.body.dateEvent.setHours(0, 0, 0, 0),
-			openReg: req.body.openReg.setHours(0, 0, 0, 0),
-			endReg: req.body.endReg.setHours(0, 0, 0, 0),
+			dateEvent: req.body.dateEvent,
+			openReg: req.body.openReg,
+			endReg: req.body.endReg,
 		};
 		const event = await eventService.update(idEvent, dataEvent);
 		res.status(200).json({
