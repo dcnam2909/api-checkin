@@ -70,6 +70,7 @@ exports.update = async (req, res, next) => {
 			name: req.body.name,
 			location: req.body.location,
 			typeEvent: req.body.typeEvent,
+			dateEvent: req.body.dateEvent,
 			openReg: req.body.openReg,
 			endReg: req.body.endReg,
 		};
