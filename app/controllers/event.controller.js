@@ -105,8 +105,8 @@ exports.generateCode = async (req, res, next) => {
 		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 10 * 1000 * 60;
 		const idEvent = req.params.idEvent;
 		const event = await eventService.getOne(idEvent);
-		console.log(new Date(Date.now()).toDateString());
-		console.log(new Date(event.dateEvent).toDateString());
+		console.log(new Date(Date.now()).getTimezoneOffset() );
+		console.log(new Date(event.dateEvent).getTimezoneOffset());
 		if (new Date(Date.now()).toDateString() < new Date(event.dateEvent).toDateString())
 			throw new AppError('This event is not begin', 400);
 		const key = await eventService.generateKey(event._id, expire);
