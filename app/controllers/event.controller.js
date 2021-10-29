@@ -49,9 +49,9 @@ exports.create = async (req, res, next) => {
 			name: req.body.name,
 			location: req.body.location,
 			typeEvent: req.body.typeEvent,
-			dateEvent: req.body.dateEvent,
-			openReg: req.body.openReg,
-			endReg: req.body.endReg,
+			dateEvent: req.body.dateEvent.setHours(0, 0, 0, 0),
+			openReg: req.body.openReg.setHours(0, 0, 0, 0),
+			endReg: req.body.endReg.setHours(0, 0, 0, 0),
 			owner: req.body.user._id,
 		};
 		const event = await eventService.createNew(newEvent);
@@ -70,9 +70,9 @@ exports.update = async (req, res, next) => {
 			name: req.body.name,
 			location: req.body.location,
 			typeEvent: req.body.typeEvent,
-			dateEvent: req.body.dateEvent,
-			openReg: req.body.openReg,
-			endReg: req.body.endReg,
+			dateEvent: req.body.dateEvent.setHours(0, 0, 0, 0),
+			openReg: req.body.openReg.setHours(0, 0, 0, 0),
+			endReg: req.body.endReg.setHours(0, 0, 0, 0),
 		};
 		const event = await eventService.update(idEvent, dataEvent);
 		res.status(200).json({
@@ -105,9 +105,12 @@ exports.generateCode = async (req, res, next) => {
 		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 10 * 1000 * 60;
 		const idEvent = req.params.idEvent;
 		const event = await eventService.getOne(idEvent);
-		console.log(new Date(Date.now()).getTimezoneOffset() );
-		console.log(new Date(event.dateEvent).getTimezoneOffset());
-		if (new Date(Date.now()).toDateString() < new Date(event.dateEvent).toDateString())
+		console.log(new Date(Date.now()).setHours(0, 0, 0, 0));
+		console.log(new Date(event.dateEvent).setHours(0, 0, 0, 0));
+		if (
+			new Date(Date.now()).setHours(0, 0, 0, 0) <
+			new Date(event.dateEvent).setHours(0, 0, 0, 0)
+		)
 			throw new AppError('This event is not begin', 400);
 		const key = await eventService.generateKey(event._id, expire);
 		res.status(200).json({
@@ -129,7 +132,10 @@ exports.generateQRCode = async (req, res, next) => {
 		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 10 * 1000 * 60;
 		const idEvent = req.params.idEvent;
 		const event = await eventService.getOne(idEvent);
-		if (new Date(Date.now()).toDateString() < new Date(event.dateEvent).toDateString())
+		if (
+			new Date(Date.now()).setHours(0, 0, 0, 0) <
+			new Date(event.dateEvent).setHours(0, 0, 0, 0)
+		)
 			throw new AppError('This event is not begin', 400);
 		const key = await eventService.generateKey(event._id, expire);
 		const nameQR = idEvent + expire;
