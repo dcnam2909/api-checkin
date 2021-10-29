@@ -110,7 +110,10 @@ exports.generateCode = async (req, res, next) => {
 		const key = await eventService.generateKey(event._id, expire);
 		res.status(200).json({
 			status: 'success',
-			key,
+			message: {
+				key,
+				expireIn: expire,
+			},
 		});
 	} catch (error) {
 		console.log(error);
@@ -132,7 +135,10 @@ exports.generateQRCode = async (req, res, next) => {
 		const qrcode = await genQRCode(key, nameQR);
 		res.status(200).json({
 			status: 'success',
-			qrcode,
+			message: {
+				qrcode,
+				expireIn: expire,
+			},
 		});
 	} catch (error) {
 		next(error);
