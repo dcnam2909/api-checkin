@@ -107,7 +107,6 @@ exports.generateCode = async (req, res, next) => {
 		if (Date.now() < new Date(event.dateEvent).getTime())
 			throw new AppError('This event is not begin', 400);
 		const key = await eventService.generateKey(event._id, expire);
-
 		res.status(200).json({
 			status: 'success',
 			key,
@@ -123,7 +122,7 @@ exports.generateQRCode = async (req, res, next) => {
 		const expireQuery = req.query.expire * 1;
 		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 10 * 1000 * 60;
 		const idEvent = req.params.idEvent;
-		const event = eventService.getOne(idEvent);
+		const event = await eventService.getOne(idEvent);
 		if (Date.now() < event.dateEvent.getTime())
 			throw new AppError('This event is not begin', 400);
 		const key = await eventService.generateKey(event._id, expire);

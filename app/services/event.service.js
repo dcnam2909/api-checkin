@@ -1,5 +1,6 @@
 const Event = require('../models/Event');
 const crypto = require('crypto-js');
+const { isValidObjectId } = require('mongoose');
 
 exports.getAll = async () => {
 	return await Event.find({ typeEvent: { $eq: 'restricted' } })
