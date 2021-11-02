@@ -4,7 +4,7 @@ const { isValidObjectId } = require('mongoose');
 
 exports.getAll = async () => {
 	return await Event.find({ typeEvent: { $eq: 'restricted' } })
-		.select('-owner -listVisiters')
+		.select('-owner -listVisitersCheckin')
 		.sort({ dateEvent: 'asc' });
 };
 
