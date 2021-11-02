@@ -67,14 +67,14 @@ exports.registerToEvent = async (idEvent, idUser) => {
 	}
 };
 
-exports.checkIn = async (idEvent, macID, timeCheckin, idUser) => {
+exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 	let event = await Event.findById(idEvent);
 	if (
 		(event.typeEvent !== 'public' && !event.listVisiters.includes(idUser)) ||
 		event.listVisitersCheckin.some((el) => el.visiter.equals(idUser))
 	)
 		return null;
-	event.listVisitersCheckin.push({ visiter: idUser, macID, timeCheckin });
+	event.listVisitersCheckin.push({ visiter: idUser, imei, timeCheckin });
 	event.save();
 	return event;
 };

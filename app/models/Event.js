@@ -33,7 +33,7 @@ const EventSchema = new mongoose.Schema(
 		listVisitersCheckin: [
 			{
 				visiter: { type: mongoose.Schema.Types.ObjectId, ref: User, unique: true },
-				macID: String,
+				imei: String,
 				timeCheckin: Date,
 			},
 		],
