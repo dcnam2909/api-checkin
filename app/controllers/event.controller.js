@@ -157,13 +157,10 @@ exports.decodeCode = async (req, res, next) => {
 	try {
 		const code = req.body.code;
 		const idEvent = await eventService.decode(code);
+		console.log(req.body.user);
 		if (!idEvent) throw new AppError('Your key is expired, please try again!', 400);
-		const event = await eventService.getOne(idEvent);
-		if (
-			event.typeEvent !== 'public' &&
-			event.listVisitersCheckin.find((el) => el.visiter.equals(user._id)) === undefined
-		)
-			throw new AppError('You can not access this event!', 401);
+		let event = await eventService.getOne(idEvent);
+
 		res.status(200).json({
 			status: 'success',
 			event,
