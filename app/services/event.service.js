@@ -75,7 +75,7 @@ exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 	)
 		return null;
 	event.listVisitersCheckin.push({ visiter: idUser, imei, timeCheckin });
-	event.save();
+	await event.save();
 	return event;
 };
 
