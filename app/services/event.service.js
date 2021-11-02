@@ -59,10 +59,10 @@ exports.registerToEvent = async (idEvent, idUser) => {
 		event.typeEvent === 'restricted' &&
 		new Date(event.openReg).getTime() < Date.now() &&
 		new Date(event.endReg).getTime() > Date.now() &&
-		!event.listVisiters.includes(idUser)
+		event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)) === undefined
 	) {
-		event.listVisiters.push(idUser);
-		event.save();
+		event.listVisitersCheckin.push({ visiter: idUser });
+		await event.save();
 		return event;
 	}
 };
@@ -70,15 +70,53 @@ exports.registerToEvent = async (idEvent, idUser) => {
 exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 	let event = await Event.findById(idEvent);
 	if (
-		(event.typeEvent !== 'public' && !event.listVisiters.includes(idUser)) ||
-		event.listVisitersCheckin.some((el) => el.visiter.equals(idUser))
-	)
-		return null;
-	event.listVisitersCheckin.push({ visiter: idUser, imei, timeCheckin });
-	await event.save();
-	return event;
+		event.typeEvent !== 'public' &&
+		event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)) !== undefined &&
+		event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)).isCheckin === false
+	) {
+		let needCheckin = event.listVisitersCheckin.findIndex((el) => el.visiter.equals(idUser));
+		event.listVisitersCheckin[needCheckin] = Object.assign(
+			event.listVisitersCheckin[needCheckin],
+			{
+				isCheckin: true,
+				imei,
+				timeCheckin,
+			},
+		);
+		await event.save();
+		return event;
+	}
+	if (
+		event.typeEvent === 'public' &&
+		event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)) === undefined
+	) {
+		event.listVisitersCheckin.push({
+			visiter: idUser,
+			imei,
+			timeCheckin,
+			isCheckin: true,
+		});
+		await event.save();
+		return event;
+	}
+	return null;
 };
 
 exports.deleteEvent = async (idEvent) => {
 	return await Event.deleteOne({ _id: idEvent });
+};
+
+exports.getReport = async (idEvent) => {
+	const event = await Event.findById(idEvent);
+	let regVisiterCount = 0;
+	let checkinVisiterCount = 0;
+	event.listVisitersCheckin.forEach((el) => {
+		if (el.isCheckin === true) checkinVisiterCount++;
+		regVisiterCount++;
+	});
+	return {
+		regVisiterCount,
+		checkinVisiterCount,
+		listCheckin: event.listVisitersCheckin,
+	};
 };

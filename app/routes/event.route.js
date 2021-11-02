@@ -22,5 +22,8 @@ eventRoute.get(
 	checkOwner,
 	eventController.generateQRCode,
 ); // expire= amount=
-eventRoute.get('/',  eventController.getAll); // All
+eventRoute.get('/', eventController.getAll); // All
+
+eventRoute.get('/:idEvent/report', checkRoles('Manager'), eventController.getReport);
+
 module.exports = eventRoute;

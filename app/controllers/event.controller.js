@@ -197,3 +197,16 @@ exports.deleteEvent = async (req, res, next) => {
 		next(error);
 	}
 };
+
+exports.getReport = async (req, res, next) => {
+	try {
+		const idEvent = req.params.idEvent;
+		const result = await eventService.getReport(idEvent);
+		res.status(200).json({
+			status: ' success',
+			result,
+		});
+	} catch (error) {
+		next(error);
+	}
+};

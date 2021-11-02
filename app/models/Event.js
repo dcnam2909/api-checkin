@@ -26,15 +26,16 @@ const EventSchema = new mongoose.Schema(
 		},
 		openReg: Date,
 		endReg: Date,
-		listVisiters: {
-			type: [mongoose.Schema.Types.ObjectId],
-			ref: User,
-		},
 		listVisitersCheckin: [
 			{
 				visiter: { type: mongoose.Schema.Types.ObjectId, ref: User, unique: true },
 				imei: String,
 				timeCheckin: Date,
+				isCheckin: {
+					required: true,
+					type: Boolean,
+					default: false,
+				},
 			},
 		],
 	},
