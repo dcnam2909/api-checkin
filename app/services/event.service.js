@@ -17,7 +17,7 @@ exports.createNew = async (newEvent) => {
 };
 
 exports.getOne = async (id) => {
-	return await Event.findById(id).select('-listVisitersCheckin');
+	return await Event.findById(id).select('-listVisitersCheckin -owner');
 };
 
 exports.update = async (id, dataUpdate) => {
