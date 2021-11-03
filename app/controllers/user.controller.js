@@ -60,8 +60,8 @@ exports.checkIn = async (req, res, next) => {
 		const { imei, timeCheckin, code, user } = req.body;
 		const idEvent = await eventService.decode(code);
 		if (!idEvent) throw new AppError('Your key is expired, please try again!', 401);
-		const event = await eventService.checkIn(idEvent, imei, timeCheckin, user._id);
-		if (!event) throw new AppError('Check-in fail!', 400);
+		const result = await eventService.checkIn(idEvent, imei, timeCheckin, user._id);
+		if (!result.event) throw new AppError(result.message, result.code);
 		res.status(200).json({
 			status: 'success',
 			message: 'Check-in successfully!',

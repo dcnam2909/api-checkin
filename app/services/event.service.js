@@ -3,9 +3,9 @@ const crypto = require('crypto-js');
 const { isValidObjectId } = require('mongoose');
 
 exports.getAll = async () => {
-	return await Event.find({ typeEvent: { $eq: 'restricted' } })
+	return await Event.find({ typeEvent: { $ne: 'private' } })
 		.select('-owner -listVisitersCheckin')
-		.sort({ dateEvent: 'asc' });
+		.sort({ dateEvent: -1 });
 };
 
 exports.getOwnerEvent = async (id) => {
@@ -69,11 +69,23 @@ exports.registerToEvent = async (idEvent, idUser) => {
 
 exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 	let event = await Event.findById(idEvent);
-	if (
-		event.typeEvent !== 'public' &&
-		event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)) !== undefined &&
-		event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)).isCheckin === false
-	) {
+	const userInEvent = event.listVisitersCheckin.find((el) => el.visiter.equals(idUser));
+	if (event.typeEvent !== 'public' && !userInEvent) {
+		return {
+			event: null,
+			message: 'You are not invited to this event',
+			code: 401,
+		};
+	}
+	console.log(userInEvent.isCheckin);
+	if (userInEvent && userInEvent.isCheckin === true) {
+		return {
+			event: null,
+			message: 'You already check in to this event',
+			code: 400,
+		};
+	}
+	if (event.typeEvent !== 'public' && (userInEvent || userInEvent.isCheckin === false)) {
 		let needCheckin = event.listVisitersCheckin.findIndex((el) => el.visiter.equals(idUser));
 		event.listVisitersCheckin[needCheckin] = Object.assign(
 			event.listVisitersCheckin[needCheckin],
@@ -84,12 +96,9 @@ exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 			},
 		);
 		await event.save();
-		return event;
+		return { event };
 	}
-	if (
-		event.typeEvent === 'public' &&
-		event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)) === undefined
-	) {
+	if (event.typeEvent === 'public' && !userInEvent) {
 		event.listVisitersCheckin.push({
 			visiter: idUser,
 			imei,
@@ -97,9 +106,8 @@ exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 			isCheckin: true,
 		});
 		await event.save();
-		return event;
+		return { event };
 	}
-	return null;
 };
 
 exports.deleteEvent = async (idEvent) => {

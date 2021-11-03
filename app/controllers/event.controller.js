@@ -160,7 +160,6 @@ exports.decodeCode = async (req, res, next) => {
 		console.log(req.body.user);
 		if (!idEvent) throw new AppError('Your key is expired, please try again!', 400);
 		let event = await eventService.getOne(idEvent);
-
 		res.status(200).json({
 			status: 'success',
 			event,
