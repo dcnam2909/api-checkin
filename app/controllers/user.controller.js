@@ -65,6 +65,11 @@ exports.checkIn = async (req, res, next) => {
 		res.status(200).json({
 			status: 'success',
 			message: 'Check-in successfully!',
+			result: {
+				imei,
+				timeCheckin,
+				event: result.event,
+			},
 		});
 	} catch (error) {
 		next(error);
