@@ -77,7 +77,6 @@ exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 			code: 401,
 		};
 	}
-	console.log(userInEvent.isCheckin);
 	if (userInEvent && userInEvent.isCheckin === true) {
 		return {
 			event: null,
@@ -85,7 +84,7 @@ exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 			code: 400,
 		};
 	}
-	if (event.typeEvent !== 'public' && (userInEvent || userInEvent.isCheckin === false)) {
+	if (event.typeEvent !== 'public' && userInEvent) {
 		let needCheckin = event.listVisitersCheckin.findIndex((el) => el.visiter.equals(idUser));
 		event.listVisitersCheckin[needCheckin] = Object.assign(
 			event.listVisitersCheckin[needCheckin],
