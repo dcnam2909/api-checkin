@@ -127,3 +127,19 @@ exports.getReport = async (idEvent) => {
 		listCheckin: event.listVisitersCheckin,
 	};
 };
+
+exports.addVisiters = async (idEvent, listVisiters) => {
+	const event = await Event.findById(idEvent)
+		.populate('listVisitersCheckin.visiter')
+		.exec();
+	console.log(event);
+	if (event.typeEvent === 'public')
+		return { event: null, message: 'You can not add visiter to this event', code: 400 };
+	event.listVisitersCheckin = [];
+	console.log(listVisiters);
+	listVisiters.forEach((visiter) => {
+		event.listVisitersCheckin.push({ visiter });
+	});
+	await event.save();
+	return { event };
+};

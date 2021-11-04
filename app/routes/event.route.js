@@ -15,13 +15,13 @@ eventRoute.get(
 	checkRoles('Manager', 'Agent'),
 	checkOwner,
 	eventController.generateCode,
-); // expire=
+);
 eventRoute.get(
 	'/:idEvent/qrcode',
 	checkRoles('Manager', 'Agent'),
 	checkOwner,
 	eventController.generateQRCode,
-); // expire= amount=
+);
 eventRoute.get('/', eventController.getAll); // All
 
 eventRoute.get('/:idEvent/report', checkRoles('Manager'), eventController.getReport);
