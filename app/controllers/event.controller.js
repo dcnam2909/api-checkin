@@ -208,3 +208,18 @@ exports.getReport = async (req, res, next) => {
 		next(error);
 	}
 };
+
+exports.addVisiters = async (req, res, next) => {
+	try {
+		const idEvent = req.params.idEvent;
+		const idUser = req.body.user._id;
+		const event = await eventService.addVisiters(idEvent, idUser);
+		if (!event) throw new AppError('Can not register to this event', 400);
+		res.status(200).json({
+			status: 'success',
+			event,
+		});
+	} catch (error) {
+		next(error);
+	}
+};

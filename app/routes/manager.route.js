@@ -15,6 +15,7 @@ managerRoute.put(
 );
 
 managerRoute.patch('/event/:idEvent', checkRoles('Manager'), checkOwner, eventController.update);
+managerRoute.patch('/event/:idEvent/addVisiters', checkRoles('Manager'), checkOwner, eventController.addVisiters);
 
 managerRoute.delete(
 	'/event/:idEvent',
