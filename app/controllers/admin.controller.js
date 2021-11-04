@@ -26,7 +26,6 @@ exports.setManager = async (req, res, next) => {
 	}
 };
 
-
 exports.setVisiter = async (req, res, next) => {
 	try {
 		const idUser = req.params.id;
