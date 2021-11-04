@@ -1,6 +1,6 @@
 const userService = require('../services/user.service');
 
-exports.getAllVisisters = async (req, res, next) => {
+exports.getAllVisiters = async (req, res, next) => {
 	try {
 		const users = await userService.getAllVisiters();
 		res.status(200).json({
