@@ -23,7 +23,6 @@ exports.updateInfo = async (id, dataUpdate) => {
 	});
 };
 
-exports.getAllUsers = async (query) => {
-	if (query) return await User.find(query);
+exports.getAllVisiters = async () => {
 	return await User.find({ role: { $eq: 'Visiter' } });
 };

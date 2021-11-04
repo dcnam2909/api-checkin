@@ -1,9 +1,8 @@
 const userService = require('../services/user.service');
 
-exports.getAllUsers = async (req, res, next) => {
+exports.getAllVisisters = async (req, res, next) => {
 	try {
-		let query = req.query;
-		const users = await userService.getAllUsers(query);
+		const users = await userService.getAllVisiters();
 		res.status(200).json({
 			status: 'success',
 			users: users,
