@@ -5,9 +5,16 @@ const app = express();
 
 const errorHandle = require('./app/middlewares/errorHandle');
 const route = require('./app/routes/route');
-const db = require('./app/config/db')
+const db = require('./app/config/db');
 //Middleware global
-app.use(cors());
+app.use(
+	cors({
+		origin: '*',
+		methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+		preflightContinue: false,
+		optionsSuccessStatus: 204,
+	}),
+);
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,7 +27,6 @@ app.use(errorHandle);
 // db();
 const connectionString = process.env.DB_CONNECT;
 db(connectionString);
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
