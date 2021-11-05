@@ -44,7 +44,8 @@ exports.setAgent = async (idUser, idEvent) => {
 exports.removeAgent = async (idUser, idEvent) => {
 	const event = await Event.findById(idEvent);
 	const index = event.owner.findIndex((el) => el.equals(idUser));
-	if (!index) return { event: null, message: 'You are not Agent of this event', code: 400 };
+	console.log(index);
+	if (index === -1) return { event: null, message: 'You are not Agent of this event', code: 400 };
 	event.owner.splice(index, 1);
 	await event.save();
 	return { event };
