@@ -15,7 +15,7 @@ managerRoute.put(
 );
 
 managerRoute.put(
-	'/event/:idEvent/removeAgent/:id',
+	'/event/:idEvent/removeAgent/:idUser',
 	checkRoles('Manager'),
 	checkOwner,
 	eventController.removeAgent,
