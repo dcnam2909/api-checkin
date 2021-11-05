@@ -87,7 +87,7 @@ exports.setAgent = async (req, res, next) => {
 	try {
 		const idUser = req.params.idUser;
 		const idEvent = req.params.idEvent;
-		const agent = await userService.getOne(idUser);
+		const agent = await userService.getOneVisiter(idUser);
 		if (agent.role !== 'Agent') throw new AppError('This user is not agent!', 401);
 		const event = await eventService.setAgent(idUser, idEvent);
 		res.status(200).json({
