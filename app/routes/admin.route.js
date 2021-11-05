@@ -7,6 +7,7 @@ const verifyToken = require('../middlewares/verifyToken');
 adminRoute.use(verifyToken);
 
 adminRoute.get('/users', checkRoles('Admin', 'Manager'), adminController.getAllVisiters);
+adminRoute.get('/agents', checkRoles('Admin', 'Manager'), adminController.getAllAgents);
 
 adminRoute.put('/setManager/:id', checkRoles('Admin'), adminController.setManager);
 
