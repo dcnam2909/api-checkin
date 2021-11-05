@@ -8,14 +8,14 @@ const eventController = require('../controllers/event.controller');
 managerRoute.use(verifyToken);
 
 managerRoute.put(
-	'/:idEvent/setAgent/:idUser',
+	'/event/:idEvent/setAgent/:idUser',
 	checkRoles('Manager'),
 	checkOwner,
 	eventController.setAgent,
 );
 
 managerRoute.put(
-	'/:idEvent/removeAgent/:id',
+	'/event/:idEvent/removeAgent/:id',
 	checkRoles('Manager'),
 	checkOwner,
 	eventController.removeAgent,
