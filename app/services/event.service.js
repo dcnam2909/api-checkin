@@ -35,6 +35,7 @@ exports.eventOwner = async (eventId, managerId) => {
 
 exports.setAgent = async (idUser, idEvent) => {
 	const event = await Event.findById(idEvent);
+	if (event.owner.find((el) => el.equals(idUser))) return event;
 	event.owner.push(idUser);
 	await event.save();
 	return event;
