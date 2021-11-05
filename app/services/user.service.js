@@ -1,5 +1,9 @@
 const User = require('../models/User');
 
+exports.getOneVisiter = async (id) => {
+	return await User.findById(id);
+};
+
 exports.changePass = async (id, currentPass, newPass) => {
 	const user = await User.findById(id).select('+password');
 	if (await user.comparePassword(currentPass)) {
@@ -25,4 +29,8 @@ exports.updateInfo = async (id, dataUpdate) => {
 
 exports.getAllVisiters = async () => {
 	return await User.find({ role: { $eq: 'Visiter' } });
+};
+
+exports.getAllAgent = async () => {
+	return await User.find({ role: { $eq: 'Agent' } });
 };

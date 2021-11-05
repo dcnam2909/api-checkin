@@ -87,11 +87,26 @@ exports.setAgent = async (req, res, next) => {
 	try {
 		const idUser = req.params.idUser;
 		const idEvent = req.params.idEvent;
-		await userService.updateInfo(idUser, { role: 'Agent' });
-		const event = await eventService.addOwner(idUser, idEvent);
+		const agent = await userService.getOne(idUser);
+		if (agent.role !== 'Agent') throw new AppError('This user is not agent!', 401);
+		const event = await eventService.setAgent(idUser, idEvent);
 		res.status(200).json({
 			status: 'success',
 			event,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+exports.removeAgent = async (req, res, next) => {
+	try {
+		const idUser = req.params.idUser;
+		const idEvent = req.params.idEvent;
+		const result = await eventService.removeAgent(idUser, idEvent);
+		if (!result.event) throw new AppError(result.message, result.code);
+		res.status(200).json({
+			status: 'success',
+			event: result.event,
 		});
 	} catch (error) {
 		next(error);

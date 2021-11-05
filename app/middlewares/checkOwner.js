@@ -4,9 +4,9 @@ const eventService = require('../services/event.service');
 module.exports = async (req, res, next) => {
 	try {
 		const idEvent = req.params.idEvent;
-		const managerId = req.body.user._id;
-		const checkOwner = await eventService.eventOwner(idEvent, managerId);
-		if (!checkOwner) throw new AppError('You can not access this event', 401);
+		const userId = req.body.user._id;
+		const check = await eventService.eventOwner(idEvent, userId);
+		if (!check) throw new AppError('You can not access to this event', 401);
 		next();
 	} catch (error) {
 		next(error);

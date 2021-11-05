@@ -14,7 +14,19 @@ managerRoute.put(
 	eventController.setAgent,
 );
 
-managerRoute.patch('/event/:idEvent/addVisiters', checkRoles('Manager'), checkOwner, eventController.addVisiters);
+managerRoute.put(
+	'/:idEvent/removeAgent/:id',
+	checkRoles('Manager'),
+	checkOwner,
+	eventController.removeAgent,
+);
+
+managerRoute.patch(
+	'/event/:idEvent/addVisiters',
+	checkRoles('Manager'),
+	checkOwner,
+	eventController.addVisiters,
+);
 
 managerRoute.patch('/event/:idEvent', checkRoles('Manager'), checkOwner, eventController.update);
 

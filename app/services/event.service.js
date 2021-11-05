@@ -9,7 +9,9 @@ exports.getAll = async () => {
 };
 
 exports.getOwnerEvent = async (id) => {
-	return await Event.find({ owner: { $eq: id } }).sort({ dateEvent: -1 });
+	return await Event.find({ owner: { $eq: id } }).sort({
+		dateEvent: -1,
+	});
 };
 
 exports.createNew = async (newEvent) => {
@@ -31,11 +33,20 @@ exports.eventOwner = async (eventId, managerId) => {
 	return await event.checkOwner(managerId);
 };
 
-exports.addOwner = async (idUser, idEvent) => {
+exports.setAgent = async (idUser, idEvent) => {
 	const event = await Event.findById(idEvent);
 	event.owner.push(idUser);
-	event.save();
+	await event.save();
 	return event;
+};
+
+exports.removeAgent = async (idUser, idEvent) => {
+	const event = await Event.findById(idEvent);
+	const index = event.owner.findIndex((el) => el.equals(idUser));
+	if (!index) return { event: null, message: 'You are not Agent of this event', code: 400 };
+	event.owner.splice(index, 1);
+	await event.save();
+	return { event };
 };
 
 exports.generateKey = async (idEvent, expire) => {
@@ -129,9 +140,7 @@ exports.getReport = async (idEvent) => {
 };
 
 exports.addVisiters = async (idEvent, listVisiters) => {
-	const event = await Event.findById(idEvent)
-		.populate('listVisitersCheckin.visiter')
-		.exec();
+	const event = await Event.findById(idEvent).populate('listVisitersCheckin.visiter').exec();
 	console.log(event);
 	if (event.typeEvent === 'public')
 		return { event: null, message: 'You can not add visiter to this event', code: 400 };

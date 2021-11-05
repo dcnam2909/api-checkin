@@ -12,6 +12,18 @@ exports.getAllVisiters = async (req, res, next) => {
 	}
 };
 
+exports.getAllAgents = async (req, res, next) => {
+	try {
+		const users = await userService.getAllAgents();
+		res.status(200).json({
+			status: 'success',
+			users: users,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
 exports.setManager = async (req, res, next) => {
 	try {
 		const idUser = req.params.id;
