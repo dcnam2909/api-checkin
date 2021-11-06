@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-
+const path = require('path');
 const errorHandle = require('./app/middlewares/errorHandle');
 const route = require('./app/routes/route');
 const db = require('./app/config/db');
@@ -16,11 +16,14 @@ app.use(
 	}),
 );
 app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //Route
 app.use('/api', route);
+app.get('/*', (req, res) => {
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 app.use(errorHandle);
 
 //Database connect
