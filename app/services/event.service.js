@@ -135,6 +135,7 @@ exports.getReport = async (idEvent) => {
 		regVisiterCount++;
 	});
 	return {
+		name: event.name,
 		regVisiterCount,
 		checkinVisiterCount,
 		listCheckin: event.listVisitersCheckin,
