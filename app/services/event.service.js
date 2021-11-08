@@ -127,7 +127,7 @@ exports.deleteEvent = async (idEvent) => {
 };
 
 exports.getReport = async (idEvent) => {
-	const event = await Event.findById(idEvent);
+	const event = await Event.findById(idEvent).populate('listVisitersCheckin.visiter');
 	let regVisiterCount = 0;
 	let checkinVisiterCount = 0;
 	event.listVisitersCheckin.forEach((el) => {

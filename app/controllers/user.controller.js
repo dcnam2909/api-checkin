@@ -43,7 +43,6 @@ exports.updateInfo = async (req, res, next) => {
 			idCB: req.body.idCB,
 			idSV: req.body.idSV,
 		};
-		console.log(req.body);
 		const user = await userService.updateInfo(req.body.user._id, dataUpdate);
 		res.status(200).json({
 			status: 'success',
