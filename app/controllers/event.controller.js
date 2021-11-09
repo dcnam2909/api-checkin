@@ -116,7 +116,7 @@ exports.removeAgent = async (req, res, next) => {
 exports.generateCode = async (req, res, next) => {
 	try {
 		const expireQuery = req.query.expire * 1;
-		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 10 * 1000 * 60;
+		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 120 * 1000 * 60;
 		const idEvent = req.params.idEvent;
 		const event = await eventService.getOne(idEvent);
 		if (
@@ -163,7 +163,6 @@ exports.generateQRCode = async (req, res, next) => {
 		next(error);
 	}
 };
-
 exports.decodeCode = async (req, res, next) => {
 	try {
 		const code = req.body.code;
