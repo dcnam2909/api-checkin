@@ -44,7 +44,6 @@ exports.setAgent = async (idUser, idEvent) => {
 exports.removeAgent = async (idUser, idEvent) => {
 	const event = await Event.findById(idEvent);
 	const index = event.owner.findIndex((el) => el.equals(idUser));
-	console.log(index);
 	if (index === -1) return { event: null, message: 'You are not Agent of this event', code: 400 };
 	event.owner.splice(index, 1);
 	await event.save();
@@ -53,7 +52,7 @@ exports.removeAgent = async (idUser, idEvent) => {
 
 exports.generateKey = async (idEvent, expire) => {
 	const event = await Event.findById(idEvent);
-	return crypto.Rabbit.encrypt(
+	return crypto.AES.encrypt(
 		JSON.stringify({ id: event._id, expire }),
 		process.env.SECRET_KEY_EVENT,
 	).toString();
@@ -61,7 +60,7 @@ exports.generateKey = async (idEvent, expire) => {
 
 exports.decode = async (code) => {
 	const decode = JSON.parse(
-		crypto.Rabbit.decrypt(code, process.env.SECRET_KEY_EVENT).toString(crypto.enc.Utf8),
+		crypto.AES.decrypt(code, process.env.SECRET_KEY_EVENT).toString(crypto.enc.Utf8),
 	);
 	if (decode.expire > Date.now()) return decode.id;
 };
@@ -144,11 +143,9 @@ exports.getReport = async (idEvent) => {
 
 exports.addVisiters = async (idEvent, listVisiters) => {
 	const event = await Event.findById(idEvent).populate('listVisitersCheckin.visiter').exec();
-	console.log(event);
 	if (event.typeEvent === 'public')
 		return { event: null, message: 'You can not add visiter to this event', code: 400 };
 	event.listVisitersCheckin = [];
-	console.log(listVisiters);
 	listVisiters.forEach((visiter) => {
 		event.listVisitersCheckin.push({ visiter });
 	});

@@ -119,8 +119,6 @@ exports.generateCode = async (req, res, next) => {
 		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 10 * 1000 * 60;
 		const idEvent = req.params.idEvent;
 		const event = await eventService.getOne(idEvent);
-		console.log(new Date(Date.now()).setHours(0, 0, 0, 0));
-		console.log(new Date(event.dateEvent).setHours(0, 0, 0, 0));
 		if (
 			new Date(Date.now()).setHours(24, 0, 0, 0) <
 			new Date(event.dateEvent).setHours(24, 0, 0, 0)
@@ -135,7 +133,6 @@ exports.generateCode = async (req, res, next) => {
 			},
 		});
 	} catch (error) {
-		console.log(error);
 		next(error);
 	}
 };
@@ -171,7 +168,6 @@ exports.decodeCode = async (req, res, next) => {
 	try {
 		const code = req.body.code;
 		const idEvent = await eventService.decode(code);
-		console.log(req.body.user);
 		if (!idEvent) throw new AppError('Your key is expired, please try again!', 400);
 		let event = await eventService.getOne(idEvent);
 		res.status(200).json({
