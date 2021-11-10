@@ -178,7 +178,7 @@ exports.decodeCode = async (req, res, next) => {
 	}
 };
 
-exports.regsiterEvent = async (req, res, next) => {
+exports.regsiterToEvent = async (req, res, next) => {
 	try {
 		const idEvent = req.params.idEvent;
 		const idUser = req.body.user._id;
