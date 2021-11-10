@@ -9,7 +9,8 @@ const createToken = (id) => {
 exports.signin = async (req, res, next) => {
 	try {
 		const { username, password } = req.body;
-		if (!username || !password) throw new AppError('Please enter your username and password!', 400);
+		if (!username || !password)
+			throw new AppError('Please enter your username and password!', 400);
 		const user = await userService.checkUser(username, password);
 		if (!user) throw new AppError('Username or password incorrect, please try again!', 401);
 		const token = createToken(user.id);
@@ -48,5 +49,3 @@ exports.signup = async (req, res, next) => {
 		next(error);
 	}
 };
-
-
