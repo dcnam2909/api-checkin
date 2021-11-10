@@ -7,6 +7,10 @@ const EventSchema = new mongoose.Schema(
 			type: String,
 			unique: true,
 			lowercase: true,
+			default: function () {
+				const chars = [...'qwertyuiopasdfghjklzxcvbnm0123456789'];
+				return [...Array(6)].map((i) => chars[(Math.random() * chars.length) | 0]).join(``);
+			},
 		},
 		name: {
 			type: String,
@@ -48,14 +52,6 @@ const EventSchema = new mongoose.Schema(
 		timestamps: true,
 	},
 );
-
-EventSchema.pre('save', async function (next) {
-	if (this.isNew) {
-		const chars = [...'qwertyuiopasdfghjklzxcvbnm0123456789'];
-		this.id = [...Array(6)].map((i) => chars[(Math.random() * chars.length) | 0]).join``;
-	}
-	next();
-});
 
 EventSchema.pre(/^find/, async function (next) {
 	this.select('-__v -user -updatedAt -createdAt');

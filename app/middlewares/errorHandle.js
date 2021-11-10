@@ -5,13 +5,13 @@ const sendError = (error, res) => {
 		status: error.status,
 		code: error.statusCode,
 		message: error.message,
-		// trace: error.stack,
 	});
 };
 
 const duplicateHandle = (error) => {
-	const key = Object.keys(error.keyValue)[0];
-	let message = `Duplicate fields: ${key}, please try again!`;
+	console.log(error);
+	// const key = Object.keys(error.keyValue)[0];
+	let message = `Duplicate fields: , please try again!`;
 	statusCode = 400;
 	return new AppError(message, statusCode);
 };

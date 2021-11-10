@@ -16,8 +16,27 @@ exports.getOwnerEvent = async (id) => {
 		.select('-id');
 };
 
-exports.createNew = async (newEvent) => {
-	return await Event.create(newEvent);
+exports.createNew = async (newEvent, repeatEvent) => {
+	let date = newEvent.dateEvent;
+	const array = new Array();
+	if (repeatEvent === 0) return await Event.create(newEvent);
+	if (repeatEvent === 7) {
+		for (let i = 0; i <= 3; i++) {
+			let numbDays = i * repeatEvent;
+			let newDate = new Date(date).setDate(new Date(date).getDate() + numbDays);
+			let addEvent = Object.assign(newEvent, { dateEvent: new Date(newDate) });
+			array.push(Event.create(addEvent));
+		}
+		return Promise.all(array);
+	}
+	if (repeatEvent === 30) {
+		for (let i = 0; i <= 3; i++) {
+			let newDate = new Date(date).setMonth(new Date(date).getMonth() + i);
+			let addEvent = Object.assign(newEvent, { dateEvent: new Date(newDate) });
+			array.push(Event.create(addEvent));
+		}
+		return Promise.all(array);
+	}
 };
 
 exports.getOne = async (id) => {

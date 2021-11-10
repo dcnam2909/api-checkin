@@ -55,7 +55,7 @@ exports.create = async (req, res, next) => {
 			owner: req.body.user._id,
 		};
 		const event = await eventService.createNew(newEvent, repeatEvent);
-		event.id = undefined;
+
 		res.status(200).json({
 			status: 'success',
 			event,
