@@ -79,7 +79,7 @@ exports.registerToEvent = async (idEvent, idUser) => {
 	}
 };
 
-exports.removeFromEvent = async (idEvent, idUser) => {
+exports.removeToEvent = async (idEvent, idUser) => {
 	const event = await Event.findById(idEvent);
 	const index = event.listVisitersCheckin.findIndex((el) => el.visiter.equals(idUser));
 	if (index === -1 || event.listVisitersCheckin[index].isCheckin === true)
