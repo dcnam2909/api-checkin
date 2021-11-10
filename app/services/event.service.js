@@ -29,7 +29,7 @@ exports.createNew = async (newEvent, repeatEvent) => {
 		return Promise.all(array);
 	}
 	if (repeatEvent === 7) {
-		for (let i = 0; i <= 3; i++) {
+		for (let i = 0; i <= 7; i++) {
 			let numbDays = i * repeatEvent;
 			let newDate = new Date(date).setDate(new Date(date).getDate() + numbDays);
 			let addEvent = Object.assign(newEvent, { dateEvent: new Date(newDate) });
@@ -38,7 +38,7 @@ exports.createNew = async (newEvent, repeatEvent) => {
 		return Promise.all(array);
 	}
 	if (repeatEvent === 30) {
-		for (let i = 0; i <= 3; i++) {
+		for (let i = 0; i <= 5; i++) {
 			let newDate = new Date(date).setMonth(new Date(date).getMonth() + i);
 			let addEvent = Object.assign(newEvent, { dateEvent: new Date(newDate) });
 			array.push(Event.create(addEvent));
