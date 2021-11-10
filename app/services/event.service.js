@@ -67,16 +67,27 @@ exports.decode = async (code) => {
 
 exports.registerToEvent = async (idEvent, idUser) => {
 	const event = await Event.findById(idEvent);
-	if (
-		event.typeEvent === 'restricted' &&
-		new Date(event.openReg).getTime() < Date.now() &&
-		new Date(event.endReg).getTime() > Date.now() &&
-		event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)) === undefined
-	) {
-		event.listVisitersCheckin.push({ visiter: idUser });
-		await event.save();
-		return event;
-	}
+	if (new Date(event.openReg).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0))
+		return {
+			event: null,
+			message: `This event has not opened register, try again in ${event.openReg}`,
+			code: 400,
+		};
+	if (new Date(event.endReg).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0))
+		return {
+			event: null,
+			message: `This event was end regsiter`,
+			code: 400,
+		};
+	if (event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)) !== undefined)
+		return {
+			event: null,
+			message: `You already register to this event`,
+			code: 400,
+		};
+	event.listVisitersCheckin.push({ visiter: idUser });
+	await event.save();
+	return { event };
 };
 
 exports.removeToEvent = async (idEvent, idUser) => {
