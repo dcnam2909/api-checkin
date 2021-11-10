@@ -192,6 +192,20 @@ exports.regsiterEvent = async (req, res, next) => {
 		next(error);
 	}
 };
+exports.removeFromEvent = async (req, res, next) => {
+	try {
+		const idEvent = req.params.idEvent;
+		const idUser = req.body.user._id;
+		const result = await eventService.removeFromEvent(idEvent, idUser);
+		if (!result) throw new AppError(result.message, result.code);
+		res.status(200).json({
+			status: 'success',
+			event: result.event,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
 
 exports.deleteEvent = async (req, res, next) => {
 	try {

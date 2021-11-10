@@ -79,6 +79,16 @@ exports.registerToEvent = async (idEvent, idUser) => {
 	}
 };
 
+exports.removeFromEvent = async (idEvent, idUser) => {
+	const event = await Event.findById(idEvent);
+	const index = event.listVisitersCheckin.findIndex((el) => el.visiter.equals(idUser));
+	if (index === -1 || event.listVisitersCheckin[index].isCheckin === true)
+		return { event: null, message: 'Something wrong!', code: 400 };
+	event.listVisitersCheckin.splice(index, 1);
+	await event.save();
+	return { event };
+};
+
 exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
 	let event = await Event.findById(idEvent);
 	const userInEvent = event.listVisitersCheckin.find((el) => el.visiter.equals(idUser));
