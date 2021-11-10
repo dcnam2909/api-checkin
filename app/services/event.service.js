@@ -20,6 +20,14 @@ exports.createNew = async (newEvent, repeatEvent) => {
 	let date = newEvent.dateEvent;
 	const array = new Array();
 	if (repeatEvent === 0) return await Event.create(newEvent);
+	if (repeatEvent === 1) {
+		for (let i = 0; i <= 6; i++) {
+			let newDate = new Date(date).setDate(new Date(date).getDate() + i);
+			let addEvent = Object.assign(newEvent, { dateEvent: new Date(newDate) });
+			array.push(Event.create(addEvent));
+		}
+		return Promise.all(array);
+	}
 	if (repeatEvent === 7) {
 		for (let i = 0; i <= 3; i++) {
 			let numbDays = i * repeatEvent;
