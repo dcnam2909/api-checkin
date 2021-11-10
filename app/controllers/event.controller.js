@@ -44,6 +44,7 @@ exports.getOne = async (req, res, next) => {
 };
 exports.create = async (req, res, next) => {
 	try {
+		const repeatEvent = req.body.repeatEvent * 1;
 		const newEvent = {
 			name: req.body.name,
 			location: req.body.location,
@@ -53,7 +54,7 @@ exports.create = async (req, res, next) => {
 			endReg: req.body.endReg,
 			owner: req.body.user._id,
 		};
-		const event = await eventService.createNew(newEvent);
+		const event = await eventService.createNew(newEvent, repeatEvent);
 		event.id = undefined;
 		res.status(200).json({
 			status: 'success',
@@ -168,7 +169,7 @@ exports.decodeCode = async (req, res, next) => {
 			idEvent = await eventService.decodeQRCode(code);
 			if (!idEvent) throw new AppError('Your key is expired, please try again!', 400);
 		}
-		const event = await eventService.getOneByDecode(idEvent);
+		const event = await eventService.getOneByCode(idEvent);
 		res.status(200).json({
 			status: 'success',
 			event,
