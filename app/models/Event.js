@@ -3,6 +3,11 @@ const User = require('./User');
 
 const EventSchema = new mongoose.Schema(
 	{
+		id: {
+			type: String,
+			unique: true,
+			lowercase: true,
+		},
 		name: {
 			type: String,
 			required: [true, 'Event name can not be empty'],
@@ -43,6 +48,14 @@ const EventSchema = new mongoose.Schema(
 		timestamps: true,
 	},
 );
+
+EventSchema.pre('save', async function (next) {
+	if (this.isNew) {
+		const chars = [...'qwertyuiopasdfghjklzxcvbnm0123456789'];
+		this.id = [...Array(6)].map((i) => chars[(Math.random() * chars.length) | 0]).join``;
+	}
+	next();
+});
 
 EventSchema.pre(/^find/, async function (next) {
 	this.select('-__v -user -updatedAt -createdAt');

@@ -54,6 +54,7 @@ exports.create = async (req, res, next) => {
 			owner: req.body.user._id,
 		};
 		const event = await eventService.createNew(newEvent);
+		event.id = undefined;
 		res.status(200).json({
 			status: 'success',
 			event,
@@ -115,8 +116,6 @@ exports.removeAgent = async (req, res, next) => {
 
 exports.generateCode = async (req, res, next) => {
 	try {
-		const expireQuery = req.query.expire * 1;
-		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 120 * 1000 * 60;
 		const idEvent = req.params.idEvent;
 		const event = await eventService.getOne(idEvent);
 		if (
@@ -124,12 +123,11 @@ exports.generateCode = async (req, res, next) => {
 			new Date(event.dateEvent).setHours(24, 0, 0, 0)
 		)
 			throw new AppError('This event is not begin', 400);
-		const key = await eventService.generateKey(event._id, expire);
+		const key = event.id;
 		res.status(200).json({
 			status: 'success',
 			message: {
 				key,
-				expireIn: expire,
 			},
 		});
 	} catch (error) {
@@ -148,10 +146,9 @@ exports.generateQRCode = async (req, res, next) => {
 			new Date(event.dateEvent).setHours(24, 0, 0, 0)
 		)
 			throw new AppError('This event is not begin', 400);
-		const key = await eventService.generateKey(event._id, expire);
-		const nameQR = idEvent + expire;
+		const key = await eventService.generateKey(event.id, expire);
 		//gen QR Code
-		const qrcode = await genQRCode(key, nameQR);
+		const qrcode = await genQRCode(key);
 		res.status(200).json({
 			status: 'success',
 			message: {
@@ -166,9 +163,12 @@ exports.generateQRCode = async (req, res, next) => {
 exports.decodeCode = async (req, res, next) => {
 	try {
 		const code = req.body.code;
-		const idEvent = await eventService.decode(code);
-		if (!idEvent) throw new AppError('Your key is expired, please try again!', 400);
-		let event = await eventService.getOne(idEvent);
+		let idEvent = code;
+		if (code.length > 6) {
+			idEvent = await eventService.decodeQRCode(code);
+			if (!idEvent) throw new AppError('Your key is expired, please try again!', 400);
+		}
+		const event = await eventService.getOneByDecode(idEvent);
 		res.status(200).json({
 			status: 'success',
 			event,

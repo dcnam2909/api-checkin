@@ -4,14 +4,16 @@ const { isValidObjectId } = require('mongoose');
 
 exports.getAll = async () => {
 	return await Event.find({ typeEvent: { $ne: 'private' } })
-		.select('-owner')
+		.select('-owner -id')
 		.sort({ dateEvent: -1 });
 };
 
 exports.getOwnerEvent = async (id) => {
-	return await Event.find({ owner: { $eq: id } }).sort({
-		dateEvent: -1,
-	});
+	return await Event.find({ owner: { $eq: id } })
+		.sort({
+			dateEvent: -1,
+		})
+		.select('-id');
 };
 
 exports.createNew = async (newEvent) => {
@@ -29,7 +31,7 @@ exports.update = async (id, dataUpdate) => {
 };
 
 exports.eventOwner = async (eventId, managerId) => {
-	const event = await Event.findById(eventId);
+	const event = await Event.findById(eventId).select('-id');
 	return await event.checkOwner(managerId);
 };
 
@@ -51,18 +53,26 @@ exports.removeAgent = async (idUser, idEvent) => {
 };
 
 exports.generateKey = async (idEvent, expire) => {
-	const event = await Event.findById(idEvent);
 	return crypto.AES.encrypt(
-		JSON.stringify({ id: event._id, expire }),
+		JSON.stringify({ id: idEvent, expire }),
 		process.env.SECRET_KEY_EVENT,
 	).toString();
 };
 
-exports.decode = async (code) => {
+exports.getCodeBluetooth = async (idEvent) => {
+	const event = await Event.findById(idEvent);
+	return event.id;
+};
+
+exports.decodeQRCode = async (code) => {
 	const decode = JSON.parse(
 		crypto.AES.decrypt(code, process.env.SECRET_KEY_EVENT).toString(crypto.enc.Utf8),
 	);
 	if (decode.expire > Date.now()) return decode.id;
+};
+
+exports.getOneByCode = async (id) => {
+	return await Event.find({ id }).select('-listVisitersCheckin -owner -id');
 };
 
 exports.registerToEvent = async (idEvent, idUser) => {
@@ -101,7 +111,7 @@ exports.removeToEvent = async (idEvent, idUser) => {
 };
 
 exports.checkIn = async (idEvent, imei, timeCheckin, idUser) => {
-	let event = await Event.findById(idEvent);
+	let event = await Event.findOne({ id: idEvent });
 	const userInEvent = event.listVisitersCheckin.find((el) => el.visiter.equals(idUser));
 	if (event.typeEvent !== 'public' && !userInEvent) {
 		return {
