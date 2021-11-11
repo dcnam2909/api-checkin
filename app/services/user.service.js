@@ -39,6 +39,6 @@ exports.getAllUsers = async () => {
 	return await User.find();
 };
 
-exports.deleteAccount = async (idUser) => {
-	return await User.deleteOne({ id: idUser });
+exports.deleteAccount = async (id) => {
+	return await User.findByIdAndDelete(id);
 };
