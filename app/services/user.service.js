@@ -34,3 +34,7 @@ exports.getAllVisiters = async () => {
 exports.getAllAgents = async () => {
 	return await User.find({ role: { $eq: 'Agent' } });
 };
+
+exports.getAllUsers = async () => {
+	return await User.find();
+};
