@@ -13,6 +13,7 @@ adminRoute.get('/agents', checkRoles('Admin', 'Manager'), adminController.getAll
 adminRoute.put('/setManager/:id', checkRoles('Admin'), adminController.setManager);
 adminRoute.put('/setAgent/:id', checkRoles('Admin', 'Manager'), adminController.setAgent);
 
-adminRoute.put('/setVisiter/:id', checkRoles('Admin','Manager'), adminController.setVisiter);
+adminRoute.put('/setVisiter/:id', checkRoles('Admin', 'Manager'), adminController.setVisiter);
+adminRoute.delete('/deleteAccount/:id', checkRoles('Admin'), adminController.deleteAccount);
 
 module.exports = adminRoute;

@@ -38,3 +38,7 @@ exports.getAllAgents = async () => {
 exports.getAllUsers = async () => {
 	return await User.find();
 };
+
+exports.deleteAccount = async (idUser) => {
+	return await User.deleteOne({ id: idUser });
+};
