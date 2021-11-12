@@ -251,7 +251,7 @@ exports.addVisiters = async (req, res, next) => {
 
 exports.addByGroup = async (req, res, next) => {
 	try {
-		const {idEvent,idGroup} = req.params;
+		const { idEvent, idGroup } = req.params;
 		const result = await eventService.addByGroup(idEvent, idGroup);
 		if (!result.event) throw new AppError(result.message, result.code);
 		res.status(200).json({
