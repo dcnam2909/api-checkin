@@ -36,9 +36,5 @@ exports.getAllAgents = async () => {
 };
 
 exports.getAllUsers = async () => {
-	return await User.find().sort({role: 1});
-};
-
-exports.deleteAccount = async (id) => {
-	return await User.findByIdAndDelete(id);
+	return await User.find().sort({ role: 1 });
 };

@@ -14,6 +14,5 @@ adminRoute.put('/setManager/:id', checkRoles('Admin'), adminController.setManage
 adminRoute.put('/setAgent/:id', checkRoles('Admin', 'Manager'), adminController.setAgent);
 
 adminRoute.put('/setVisiter/:id', checkRoles('Admin', 'Manager'), adminController.setVisiter);
-adminRoute.delete('/deleteAccount/:id', checkRoles('Admin'), adminController.deleteAccount);
 
 module.exports = adminRoute;

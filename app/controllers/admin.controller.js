@@ -74,15 +74,3 @@ exports.setVisiter = async (req, res, next) => {
 		next(error);
 	}
 };
-exports.deleteAccount = async (req, res, next) => {
-	try {
-		const idUser = req.params.id;
-		const user = await userService.deleteAccount(idUser);
-		res.status(200).json({
-			status: 'success',
-			user,
-		});
-	} catch (error) {
-		next(error);
-	}
-};

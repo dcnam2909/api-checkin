@@ -49,6 +49,7 @@ const UserSchema = new mongoose.Schema(
 			enum: ['Visiter', 'Manager', 'Agent', 'Admin'],
 			default: 'Visiter',
 		},
+	
 	},
 	{ timestamps: true },
 );
@@ -68,7 +69,7 @@ UserSchema.pre('save', async function (next) {
 });
 
 UserSchema.pre(/^find/, async function (next) {
-	this.select('-__v -updatedAt -createdAt');
+	this.select('-__v -updatedAt -createdAt ');
 	next();
 });
 

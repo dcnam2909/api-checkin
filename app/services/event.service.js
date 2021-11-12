@@ -1,4 +1,5 @@
 const Event = require('../models/Event');
+const Group = require('../models/GroupVisiter');
 const crypto = require('crypto-js');
 const { isValidObjectId } = require('mongoose');
 
@@ -206,6 +207,19 @@ exports.addVisiters = async (idEvent, listVisiters) => {
 	event.listVisitersCheckin = [];
 	listVisiters.forEach((visiter) => {
 		event.listVisitersCheckin.push({ visiter });
+	});
+	await event.save();
+	return { event };
+};
+
+exports.addByGroup = async (idEvent, idGroup) => {
+	const event = await Event.findById(idEvent).populate('listVisitersCheckin.visiter').exec();
+	if (event.typeEvent === 'public')
+		return { event: null, message: 'You can not add visiter to this event', code: 400 };
+	const group = await Group.findById(idGroup);
+	group.users.forEach((user) => {
+		if (!event.listVisitersCheckin.find((el) => el.visiter.equals(user._id)))
+			event.listVisitersCheckin.push({ visiter: user });
 	});
 	await event.save();
 	return { event };

@@ -28,6 +28,14 @@ managerRoute.patch(
 	eventController.addVisiters,
 );
 
+
+managerRoute.patch(
+	'/event/:idEvent/addByGroup/:idGroup',
+	checkRoles('Manager'),
+	checkOwner,
+	eventController.addByGroup,
+);
+
 managerRoute.patch('/event/:idEvent', checkRoles('Manager'), checkOwner, eventController.update);
 
 managerRoute.delete(
