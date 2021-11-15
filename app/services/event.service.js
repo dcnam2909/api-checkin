@@ -11,6 +11,7 @@ exports.getAll = async () => {
 
 exports.getOwnerEvent = async (id) => {
 	return await Event.find({ owner: { $eq: id } })
+		.populate('listVisitersCheckin.visiter')
 		.sort({
 			dateEvent: -1,
 		})
