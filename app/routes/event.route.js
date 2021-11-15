@@ -9,8 +9,8 @@ const checkOwner = require('../middlewares/checkOwner');
 eventRoute.use(verifyToken);
 
 eventRoute.post('/decode', eventController.decodeCode); // One
-eventRoute.post('/:idEvent/registerToEvent', eventController.regsiterToEvent);
-eventRoute.post('/:idEvent/removeToEvent', eventController.removeToEvent);
+eventRoute.get('/:idEvent/registerToEvent', eventController.regsiterToEvent);
+eventRoute.get('/:idEvent/removeToEvent', eventController.removeToEvent);
 eventRoute.get(
 	'/:idEvent/code',
 	checkRoles('Manager', 'Agent'),
