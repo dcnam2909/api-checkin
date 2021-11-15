@@ -187,6 +187,7 @@ exports.regsiterToEvent = async (req, res, next) => {
 		if (!result.event) throw new AppError(result.message, result.code);
 		res.status(200).json({
 			status: 'success',
+			message: 'Register successfully',
 			event: result.event,
 		});
 	} catch (error) {
@@ -201,6 +202,7 @@ exports.removeToEvent = async (req, res, next) => {
 		if (!result.event) throw new AppError(result.message, result.code);
 		res.status(200).json({
 			status: 'success',
+			message: 'Unregister successfully',
 			event: result.event,
 		});
 	} catch (error) {
