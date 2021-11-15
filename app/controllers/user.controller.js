@@ -62,7 +62,6 @@ exports.checkIn = async (req, res, next) => {
 			idEvent = await eventService.decodeQRCode(code);
 		}
 		if (!idEvent) throw new AppError('Your key is expired, please try again!', 401);
-		console.log(idEvent);
 		const result = await eventService.checkIn(idEvent, imei, timeCheckin, user._id);
 		if (!result.event) throw new AppError(result.message, result.code);
 		res.status(200).json({
@@ -73,6 +72,19 @@ exports.checkIn = async (req, res, next) => {
 				timeCheckin,
 				event: result.event,
 			},
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.getRegEvent = async (req, res, next) => {
+	try {
+		const idUser = req.body.user._id;
+		const result = await eventService.getRegEvent(idUser);
+		res.status(200).json({
+			status: 'success',
+			event: result.event,
 		});
 	} catch (error) {
 		next(error);

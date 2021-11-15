@@ -8,6 +8,7 @@ const verifyToken = require('../middlewares/verifyToken');
 userRoute.use(verifyToken);
 
 userRoute.get('/', userController.getInfo);
+userRoute.get('/event', checkRoles('Visiter'), userController.getRegEvent);
 
 userRoute.post('/checkin', checkRoles('Visiter'), userController.checkIn);
 
