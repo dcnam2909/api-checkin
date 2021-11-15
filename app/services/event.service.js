@@ -227,6 +227,8 @@ exports.addByGroup = async (idEvent, idGroup) => {
 };
 
 exports.getRegEvent = async (idUser) => {
-	const event = await Event.find({ listVisitersCheckin: { $elemMatch: { visiter: idUser } } }).select('-listVisitersCheckin -owner -id');
+	const event = await Event.find({
+		listVisitersCheckin: { $elemMatch: { visiter: idUser, isCheckin: false } },
+	}).select('-listVisitersCheckin -owner -id');
 	return { event };
 };
