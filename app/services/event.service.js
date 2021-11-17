@@ -1,7 +1,8 @@
 const Event = require('../models/Event');
 const Group = require('../models/GroupVisiter');
 const crypto = require('crypto-js');
-const { isValidObjectId } = require('mongoose');
+const xlsx = require('node-xlsx');
+const User = require('../models/User');
 
 exports.getAll = async () => {
 	return await Event.find({ typeEvent: { $ne: 'private' } })
@@ -230,5 +231,67 @@ exports.getRegEvent = async (idUser) => {
 	const event = await Event.find({
 		listVisitersCheckin: { $elemMatch: { visiter: idUser, isCheckin: false } },
 	}).select('-listVisitersCheckin -owner -id');
+	return { event };
+};
+
+exports.getReportFile = async (idEvent) => {
+	const event = await Event.findById(idEvent).populate('listVisitersCheckin.visiter');
+	const dataCheckin = event.listVisitersCheckin.reduce((acc, cur) => {
+		acc.push([
+			cur.visiter.username,
+			cur.isCheckin ? 'Đã check-in' : 'Chưa check-in',
+			cur.timeCheckin
+				? `${new Date(cur.timeCheckin).getDate()}/${new Date(
+						cur.timeCheckin,
+				  ).getMonth()}/${new Date(cur.timeCheckin).getFullYear()}`
+				: 'Chưa check-in',
+			cur.imei ? cur.imei : 'Chưa check-in',
+			cur.visiter.fullName,
+			cur.visiter.email,
+			cur.visiter.phone,
+			cur.visiter.address,
+			cur.visiter.workUnit,
+			cur.visiter.addressUnit,
+			cur.visiter.idCB ? cur.visiter.idCB : '',
+			cur.visiter.idSV ? cur.visiter.idSV : '',
+		]);
+		return acc;
+	}, []);
+	dataCheckin.unshift([
+		'Username',
+		'Đã check-in',
+		'Thời gian check-in',
+		'Thiết bị check-in',
+		'Họ và tên',
+		'Email',
+		'Số điện thoại',
+		'Địa chỉ',
+		'Đơn vị công tác',
+		'Địa chỉ đơn vị công tác',
+		'Mã số cán bộ',
+		'Mã số sinh viên',
+	]);
+
+	const buffer = xlsx.build([{ name: 'mySheetName', data: dataCheckin }]);
+	return buffer;
+};
+
+exports.addByFile = async (idEvent, file) => {
+	const event = await Event.findById(idEvent).populate('listVisitersCheckin.visiter').exec();
+	const data = xlsx.parse(file.buffer);
+	const columnUsername = data[0].data.shift().indexOf('Username');
+	const dataUsername = data[0].data.map((el) => el[columnUsername]);
+	const dataVisiter = await User.find({
+		$and: [{ username: { $in: dataUsername } }, { role: 'Visiter' }],
+	});
+	dataVisiter.forEach((user) => {
+		if (!event.listVisitersCheckin.find((el) => el.visiter.equals(user._id)))
+			event.listVisitersCheckin.push({ visiter: user });
+	});
+	await event.save();
+	await Group.create({
+		groupName: file.originalname.split('.')[0],
+		users: dataVisiter.map((user) => user._id),
+	});
 	return { event };
 };

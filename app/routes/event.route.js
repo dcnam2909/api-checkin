@@ -26,5 +26,6 @@ eventRoute.get(
 eventRoute.get('/', eventController.getAll); // All
 
 eventRoute.get('/:idEvent/report', checkRoles('Manager'), eventController.getReport);
+eventRoute.get('/:idEvent/reportFile', checkRoles('Manager'), eventController.getReportFile);
 
 module.exports = eventRoute;

@@ -4,7 +4,8 @@ const checkRoles = require('../middlewares/checkRoles');
 const verifyToken = require('../middlewares/verifyToken');
 const managerRoute = express.Router();
 const eventController = require('../controllers/event.controller');
-
+const multer = require('multer');
+const upload = multer();
 managerRoute.use(verifyToken);
 
 managerRoute.put(
@@ -28,12 +29,19 @@ managerRoute.patch(
 	eventController.addVisiters,
 );
 
-
 managerRoute.patch(
 	'/event/:idEvent/addByGroup/:idGroup',
 	checkRoles('Manager'),
 	checkOwner,
 	eventController.addByGroup,
+);
+
+managerRoute.post(
+	'/event/:idEvent/addByFile',
+	checkRoles('Manager'),
+	checkOwner,
+	upload.single('file'),
+	eventController.addByFile,
 );
 
 managerRoute.patch('/event/:idEvent', checkRoles('Manager'), checkOwner, eventController.update);

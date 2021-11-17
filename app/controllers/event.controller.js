@@ -1,6 +1,5 @@
 const eventService = require('../services/event.service');
 const userService = require('../services/user.service');
-
 const AppError = require('../config/AppError');
 const { genQRCode } = require('../config/genQRCode');
 exports.getAll = async (req, res, next) => {
@@ -236,6 +235,17 @@ exports.getReport = async (req, res, next) => {
 	}
 };
 
+exports.getReportFile = async (req, res, next) => {
+	try {
+		const idEvent = req.params.idEvent;
+		const result = await eventService.getReportFile(idEvent);
+		res.send(result);
+	} catch (error) {
+		console.log(error);
+		next(error);
+	}
+};
+
 exports.addVisiters = async (req, res, next) => {
 	try {
 		const idEvent = req.params.idEvent;
@@ -261,6 +271,22 @@ exports.addByGroup = async (req, res, next) => {
 			event: result.event,
 		});
 	} catch (error) {
+		next(error);
+	}
+};
+
+exports.addByFile = async (req, res, next) => {
+	try {
+		const idEvent = req.params.idEvent;
+		const file = req.file;
+		const result = await eventService.addByFile(idEvent, file);
+		if (!result.event) throw new AppError(result.message, result.code);
+		res.status(200).json({
+			status: 'success',
+			event: result.event,
+		});
+	} catch (error) {
+		console.log(error);
 		next(error);
 	}
 };
