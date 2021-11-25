@@ -297,7 +297,7 @@ exports.addByFile = async (idEvent, file) => {
 };
 
 exports.getAllEventAdmin = async () => {
-	const event = await Event.find().sort({ dateEvent: -1 });
+	const event = await Event.find().populate('owner').sort({ dateEvent: -1 });
 	return event;
 };
 
