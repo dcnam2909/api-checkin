@@ -295,3 +295,12 @@ exports.addByFile = async (idEvent, file) => {
 	});
 	return { event };
 };
+
+exports.getAllEventAdmin = async () => {
+	const event = await Event.find().sort({ dateEvent: -1 });
+	return event;
+};
+
+exports.deleteEventAdmin = async (idEvent) => {
+	return await Event.findByIdAndRemove(idEvent);
+};

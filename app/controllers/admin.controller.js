@@ -1,4 +1,5 @@
 const userService = require('../services/user.service');
+const eventService = require('../services/event.service');
 
 exports.getAllVisiters = async (req, res, next) => {
 	try {
@@ -69,6 +70,31 @@ exports.setVisiter = async (req, res, next) => {
 		res.status(200).json({
 			status: 'success',
 			user,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.deleteEventAdmin = async (req, res, next) => {
+	try {
+		const idEvent = req.params.idEvent;
+		const event = await eventService.deleteEventAdmin(idEvent);
+		res.status(200).json({
+			status: 'success',
+			event,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.getAllEventAdmin = async (req, res, next) => {
+	try {
+		const events = await eventService.getAllEventAdmin();
+		res.status(200).json({
+			status: 'success',
+			events,
 		});
 	} catch (error) {
 		next(error);

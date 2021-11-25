@@ -9,6 +9,8 @@ adminRoute.use(verifyToken);
 adminRoute.get('/visiters', checkRoles('Admin', 'Manager'), adminController.getAllVisiters);
 adminRoute.get('/users', checkRoles('Admin', 'Manager'), adminController.getAllUsers);
 adminRoute.get('/agents', checkRoles('Admin', 'Manager'), adminController.getAllAgents);
+adminRoute.get('/events', checkRoles('Admin', 'Manager'), adminController.getAllEventAdmin);
+adminRoute.delete('/events/:id/deleteEvent', checkRoles('Admin', 'Manager'), adminController.deleteEventAdmin);
 
 adminRoute.put('/setManager/:id', checkRoles('Admin'), adminController.setManager);
 adminRoute.put('/setAgent/:id', checkRoles('Admin', 'Manager'), adminController.setAgent);
