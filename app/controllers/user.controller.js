@@ -58,6 +58,12 @@ exports.checkIn = async (req, res, next) => {
 	try {
 		const { imei, timeCheckin, code, user } = req.body;
 		let idEvent = code;
+		if (!code) {
+			res.status(400).json({
+				status: 'error',
+				message: 'Code cannot empty',
+			});
+		}
 		if (code.length > 6) {
 			idEvent = await eventService.decodeQRCode(code);
 		}
