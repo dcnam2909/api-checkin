@@ -52,3 +52,17 @@ exports.addToGroup = async (req, res, next) => {
 		next(error);
 	}
 };
+
+exports.addByFile = async (req, res, next) => {
+	try {
+		const idGroup = req.params.idGroup;
+		const file = req.file;
+		const group = await groupService.addByFile(idGroup, file);
+		res.status(200).json({
+			status: 'success',
+			group
+		});
+	} catch (error) {
+		next(error);
+	}
+};

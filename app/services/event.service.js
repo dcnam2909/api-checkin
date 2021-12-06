@@ -107,13 +107,13 @@ exports.getOneByCode = async (id) => {
 
 exports.registerToEvent = async (idEvent, idUser) => {
 	const event = await Event.findById(idEvent);
-	if (new Date(event.openReg).setHours(0, 0, 0, 0) > new Date().setHours(0, 0, 0, 0))
+	if (new Date(event.openReg) > new Date())
 		return {
 			event: null,
 			message: `This event has not opened register, try again in ${event.openReg}`,
 			code: 400,
 		};
-	if (new Date(event.endReg).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0))
+	if (new Date(event.endReg) < new Date())
 		return {
 			event: null,
 			message: `This event was end regsiter`,
@@ -122,7 +122,7 @@ exports.registerToEvent = async (idEvent, idUser) => {
 	if (event.listVisitersCheckin.find((el) => el.visiter.equals(idUser)) !== undefined)
 		return {
 			event: null,
-			message: `You already register to this event`,
+			message: `You already registered to this event`,
 			code: 400,
 		};
 	event.listVisitersCheckin.push({ visiter: idUser });
@@ -229,7 +229,7 @@ exports.addByGroup = async (idEvent, idGroup) => {
 
 exports.getRegEvent = async (idUser) => {
 	const event = await Event.find({
-		listVisitersCheckin: { $elemMatch: { visiter: idUser, isCheckin: false } },
+		listVisitersCheckin: { $elemMatch: { visiter: idUser } },
 	}).select('-listVisitersCheckin -owner -id');
 	return { event };
 };
@@ -289,10 +289,6 @@ exports.addByFile = async (idEvent, file) => {
 			event.listVisitersCheckin.push({ visiter: user });
 	});
 	await event.save();
-	await Group.create({
-		groupName: file.originalname.split('.')[0],
-		users: dataVisiter.map((user) => user._id),
-	});
 	return { event };
 };
 

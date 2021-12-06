@@ -118,10 +118,7 @@ exports.generateCode = async (req, res, next) => {
 	try {
 		const idEvent = req.params.idEvent;
 		const event = await eventService.getOne(idEvent);
-		if (
-			new Date(Date.now()).setHours(24, 0, 0, 0) <
-			new Date(event.dateEvent).setHours(24, 0, 0, 0)
-		)
+		if (new Date(Date.now()) < new Date(event.dateEvent).getTime())
 			throw new AppError('This event is not begin', 400);
 		const key = event.id;
 		res.status(200).json({
@@ -137,14 +134,11 @@ exports.generateCode = async (req, res, next) => {
 
 exports.generateQRCode = async (req, res, next) => {
 	try {
-		const expireQuery = req.query.expire * 1;
+		const expireQuery = Math.abs(req.query.expire * 1);
 		const expire = Date.now() + expireQuery * 1000 * 60 || Date.now() + 10 * 1000 * 60;
 		const idEvent = req.params.idEvent;
 		const event = await eventService.getOne(idEvent);
-		if (
-			new Date(Date.now()).setHours(24, 0, 0, 0) <
-			new Date(event.dateEvent).setHours(24, 0, 0, 0)
-		)
+		if (new Date(Date.now()) < new Date(event.dateEvent).getTime())
 			throw new AppError('This event is not begin', 400);
 		const key = await eventService.generateKey(event.id, expire);
 		//gen QR Code
