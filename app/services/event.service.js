@@ -298,5 +298,5 @@ exports.getAllEventAdmin = async () => {
 };
 
 exports.deleteEventAdmin = async (idEvent) => {
-	return await Event.findByIdAndRemove(idEvent);
+	return await Event.deleteOne({ _id: idEvent });
 };
