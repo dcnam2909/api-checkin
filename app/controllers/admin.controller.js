@@ -78,7 +78,7 @@ exports.setVisiter = async (req, res, next) => {
 
 exports.deleteEventAdmin = async (req, res, next) => {
 	try {
-		const idEvent = req.params.idEvent;
+		const idEvent = req.params.id;
 		const event = await eventService.deleteEvent(idEvent);
 		res.status(200).json({
 			status: 'success',
