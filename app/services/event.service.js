@@ -296,7 +296,3 @@ exports.getAllEventAdmin = async () => {
 	const event = await Event.find().populate('owner').sort({ dateEvent: -1 });
 	return event;
 };
-
-exports.deleteEventAdmin = async (idEvent) => {
-	return await Event.deleteOne({ _id: idEvent });
-};
