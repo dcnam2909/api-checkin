@@ -237,13 +237,18 @@ exports.getRegEvent = async (idUser) => {
 exports.getReportFile = async (idEvent) => {
 	const event = await Event.findById(idEvent).populate('listVisitersCheckin.visiter');
 	const dataCheckin = event.listVisitersCheckin.reduce((acc, cur) => {
+		console.log(
+			new Date(cur.timeCheckin).toLocaleString('vi-VN', {
+				timeZone: 'UTC',
+			}),
+		);
 		acc.push([
 			cur.visiter.username,
 			cur.isCheckin ? 'Đã check-in' : 'Chưa check-in',
 			cur.timeCheckin
-				? `${new Date(cur.timeCheckin).getDate()}/${new Date(
-						cur.timeCheckin,
-				  ).getMonth()}/${new Date(cur.timeCheckin).getFullYear()}`
+				? `${new Date(cur.timeCheckin).toLocaleString('vi-VN', {
+						timeZone: 'UTC',
+				  })}`
 				: 'Chưa check-in',
 			cur.imei ? cur.imei : 'Chưa check-in',
 			cur.visiter.fullName,
